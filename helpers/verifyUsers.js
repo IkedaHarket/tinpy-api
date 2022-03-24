@@ -2,7 +2,7 @@
     Helpers para verificar en la bd de usuarios
 */
 const Usuario = require("../models/usuarios")
-const Rol =     require("../models/roles")
+const Rol =     require("../models/roles");
 
 const verifyEmailReg = async (correo) => {
   const existeCorreo = await Usuario.findOne({ correo });
@@ -34,9 +34,15 @@ const verifyUserRol = async (req, res, rol) => {
     });
   }
 };
+const verifyUserAdmin = async(req)=>{
+  const rol = await Rol.findById(req.usuario.rol);
+  if(rol.nombre != 'admin') return false;
+  return  true
+}
 module.exports = {
     verifyEmailReg,
     verifyEmailNoReg,
     verifyUserId,
     verifyUserRol,
+    verifyUserAdmin,
 }

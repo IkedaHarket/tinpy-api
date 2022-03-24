@@ -7,7 +7,7 @@ const getAllUsers = async (req, res) => {
   try {
     const usuarios = await Usuario.find().populate([
       { path: 'rol', model: 'Rol' },
-  ]); ;
+  ]);
 
     return res.status(200).json({
       ok: true,

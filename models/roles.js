@@ -1,5 +1,5 @@
 /*
-    Rol Template
+    Rol Schema
 */
 const {Schema, model} = require('mongoose');
 

@@ -1,0 +1,2 @@
+Estas imagenes van en ./uploads/. 
+Mover de esta carpeta

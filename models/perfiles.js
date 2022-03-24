@@ -1,5 +1,5 @@
 /*
-    User Template
+    Perfil Usuario Schema
 */
 
 const {Schema, model} = require('mongoose');
