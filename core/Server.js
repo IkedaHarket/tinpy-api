@@ -12,6 +12,7 @@ class Server {
             usuarios:         '/api/users',
             roles:            '/api/roles',
             perfilUsuario:    '/api/perfiles',
+            tipoNegocios:     '/api/tipos-negocios',
           };
         
         this.conectarDB();
@@ -36,6 +37,7 @@ class Server {
         this.app.use(this.paths.auth,           require('../routes/auth'));
         this.app.use(this.paths.usuarios,       require('../routes/usuarios'));
         this.app.use(this.paths.perfilUsuario,  require('../routes/perfilUsuario'));
+        this.app.use(this.paths.tipoNegocios,   require('../routes/tipoNegocios'));
     }
     listen(){//Escucha
         this.app.listen(this.port,()=>{
