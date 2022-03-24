@@ -5,7 +5,7 @@
 const {Schema, model} = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate-v2')
 
-const UsuarioSchema =  Schema(
+const UsuarioSchema = new Schema(
     {
       correo: {
         type: String,

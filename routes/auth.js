@@ -8,7 +8,6 @@ const {validarJWT} = require("../middlewares/validarJWT");
 
 const router = new Router();
 
-
 router.post('/register',[
     check('correo','El correo es obligatorio').not().isEmpty(),
     check('correo','El correo no es valido').isEmail(),

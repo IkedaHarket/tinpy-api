@@ -32,9 +32,10 @@ class Server {
         this.app.use(express.static('uploads'))
     }
     routes(){
-        this.app.use(this.paths.roles,      require('../routes/roles'));
-        this.app.use(this.paths.auth,       require('../routes/auth'));
-        this.app.use(this.paths.usuarios,   require('../routes/usuarios'));
+        this.app.use(this.paths.roles,          require('../routes/roles'));
+        this.app.use(this.paths.auth,           require('../routes/auth'));
+        this.app.use(this.paths.usuarios,       require('../routes/usuarios'));
+        this.app.use(this.paths.perfilUsuario,  require('../routes/perfilUsuario'));
     }
     listen(){//Escucha
         this.app.listen(this.port,()=>{
