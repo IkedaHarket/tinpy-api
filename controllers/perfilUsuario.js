@@ -66,7 +66,10 @@ const crearPerfil = async(req,res) => {
                 msg:'Este usuario ya tiene un perfil asociados'
             })
         }
-        data.img = req.file.filename;
+        data.img = 'default.png'
+        if(req.file){
+            data.img = req.file.filename;
+        }
 
         const perfil = new PerfilUsuario({...data,usuario:idUser});
         await perfil.save(); 
@@ -135,8 +138,7 @@ const deletePerfilUser = async(req,res) =>{
         }
 
         if(oldPerfil.img != 'default.png') deleteImg(oldPerfil.img)
-        
-        const perfil = await PerfilUsuario.findByIdAndUpdate(id,{estado:!oldPerfil.estado,img:'default.png'},{new:true})
+        const perfil = await PerfilUsuario.findByIdAndUpdate(id,{estado:!oldPerfil.estado ,img:'default.png'},{new:true})
 
         return res.status(200).json({
             ok:true,
