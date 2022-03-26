@@ -1,47 +1,51 @@
 
 const { Router } = require('express');
-const { param } = require('express-validator');
+const { check,param } = require('express-validator');
 
-const { getAllHorarios, getHorariosPaginate, getHorarioById, crearHorario, modHorario, deleteHorario } = require('../controllers/horario');
-const { verifyHorarioById } = require('../helpers/verifyHorarios');
+const { getAllCategorias, getCategoriasPaginate, getCategoriaById, crearCategorias, modCategoria, deleteCategoria } = require('../controllers/categorias');
+const { verifyCategoriaById } = require('../helpers/verifyCategorias');
 const { validarCampos } = require('../middlewares/validarCampos');
 const { validarJWT } = require('../middlewares/validarJWT');
+const { validarAdmin } = require('../middlewares/verifyAdmin');
 
 const router =  new Router();
-//
-    //TODO : Hacer que solo un negocio pueda editar solo su horario
-//
-router.get('/all',getAllHorarios);
 
-router.get('/paginate',getHorariosPaginate);
+router.get('/all',getAllCategorias);
+
+router.get('/paginate',getCategoriasPaginate);
 
 router.get('/:id',[
     param('id','El ID no puede estar vacio').not().isEmpty(),
     param('id', 'No es un ID valido').isMongoId(),
-    param('id').custom(verifyHorarioById),
+    param('id').custom(verifyCategoriaById),
     validarCampos
-],getHorarioById)
+],getCategoriaById)
 
 router.post('/',[
     validarJWT,
+    validarAdmin,
+    check('nombre','El nombre de la categoria es obligatoria').not().isEmpty(),
     validarCampos
-],crearHorario)
+],crearCategorias)
 
 router.put('/:id',[
     validarJWT,
+    validarAdmin,
     param('id','El ID no puede estar vacio').not().isEmpty(),
     param('id', 'No es un ID valido').isMongoId(),
-    param('id').custom(verifyHorarioById),
+    param('id').custom(verifyCategoriaById),
+    check('nombre','El nombre de la categoria es obligatoria').not().isEmpty(),
     validarCampos
-],modHorario)
+],modCategoria)
 
 router.delete('/:id',[
     validarJWT,
+    validarAdmin,
     param('id','El ID no puede estar vacio').not().isEmpty(),
     param('id', 'No es un ID valido').isMongoId(),
-    param('id').custom(verifyHorarioById),
+    param('id').custom(verifyCategoriaById),
     validarCampos
-],deleteHorario)
+],deleteCategoria)
 
 
 module.exports = router;
