@@ -15,7 +15,8 @@ class Server {
             tipoNegocios:     '/api/tipos-negocios',
             direcciones:      '/api/direcciones',
             categorias:       '/api/categorias',
-          };
+            estadosAnimo:     '/api/estados-animo',
+        };
         
         this.conectarDB();
         this.middlewares();
@@ -42,6 +43,7 @@ class Server {
         this.app.use(this.paths.tipoNegocios,   require('../routes/tipoNegocios'));
         this.app.use(this.paths.direcciones,    require('../routes/direcciones'));
         this.app.use(this.paths.categorias,     require('../routes/categorias'));
+        this.app.use(this.paths.estadosAnimo,   require('../routes/estadosAnimos'));
     }
     listen(){//Escucha
         this.app.listen(this.port,()=>{
