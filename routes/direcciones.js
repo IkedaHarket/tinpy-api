@@ -8,6 +8,10 @@ const { validarJWT } = require('../middlewares/validarJWT');
 
 const router =  new Router();
 
+//
+    //TODO : Hacer que solo un negocio pueda editar solo su dureccion
+//
+
 router.get('/all',getAllDirecciones);
 
 router.get('/paginate',getDireccionesPaginate);
