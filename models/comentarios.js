@@ -2,6 +2,7 @@
     Comentarios Schema
 */
 const {Schema, model} = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate-v2')
 
 const ComentariosSchema = new Schema({
   titulo: {
@@ -24,7 +25,7 @@ const ComentariosSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "PerfilUsuario",
   }],
-  numeroDisLikes:{
+  numeroDislikes:{
     type:Number,
   },
   dislikes:[{
@@ -39,5 +40,5 @@ const ComentariosSchema = new Schema({
 {
   timestamps: true,
 });
-
+ComentariosSchema.plugin(mongoosePaginate);
 module.exports = model('Comentario',ComentariosSchema);

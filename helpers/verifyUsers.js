@@ -26,7 +26,6 @@ const verifyUserId = async (id) => {
 };
 const verifyUserRol = async (req, res, rol) => {
   const rolBD = await Rol.findById(req.usuario?.rol);
-  console.log(rolBD);
   if (rolBD.nombre != rol) {
     return res.status(401).json({
       ok: false,

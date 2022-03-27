@@ -17,6 +17,7 @@ class Server {
             categorias:       '/api/categorias',
             estadosAnimo:     '/api/estados-animo',
             horarios:         '/api/horarios',
+            comentarios:      '/api/comentarios',
         };
         
         this.conectarDB();
@@ -46,6 +47,7 @@ class Server {
         this.app.use(this.paths.categorias,     require('../routes/categorias'));
         this.app.use(this.paths.estadosAnimo,   require('../routes/estadosAnimos'));
         this.app.use(this.paths.horarios,       require('../routes/horarios'));
+        this.app.use(this.paths.comentarios,    require('../routes/comentarios'));
     }
     listen(){//Escucha
         this.app.listen(this.port,()=>{

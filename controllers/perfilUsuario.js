@@ -1,6 +1,6 @@
 
 const PerfilUsuario = require('../models/perfiles');
-const { verifyPerfilUserByIdUser } = require('../helpers/verifyPerfilUser');
+const { verifyPerfilUserByIdUser } = require('../helpers/verifyPerfiles');
 const { deleteImg } = require('../helpers/deleteImg');
 const { verifyUserAdmin } = require('../helpers/verifyUsers');
 
