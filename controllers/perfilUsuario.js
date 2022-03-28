@@ -55,6 +55,22 @@ const getPerfilById = async (req, res) =>{
         })
     }
 }
+const getPerfilByUsuario = async (req, res) =>{
+    try {
+        const {id} = req.params;
+
+        const perfil = await PerfilUsuario.findOne({usuario:id}).populate([
+            { path: 'usuario', model: 'Usuario' },
+        ]); 
+        
+        return res.status(200).json(perfil)
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            msg:"Error interno del servidor"
+        })
+    }
+}
 const crearPerfil = async(req,res) => {
     try {
         const {...data} = req.body;
@@ -157,6 +173,7 @@ module.exports = {
     getAllPerfiles,
     getPerfilesUsersPaginate,
     getPerfilById,
+    getPerfilByUsuario,
     crearPerfil,
     modPerfilUser,
     deletePerfilUser,

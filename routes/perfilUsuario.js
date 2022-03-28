@@ -3,7 +3,7 @@ const { Router } = require('express');
 const { param } = require('express-validator');
 
 const { fileUpload } = require('../middlewares/fileUpload');
-const { crearPerfil, getAllPerfiles, getPerfilesUsersPaginate, getPerfilById, modPerfilUser, deletePerfilUser } = require('../controllers/perfilUsuario');
+const { crearPerfil, getAllPerfiles, getPerfilesUsersPaginate, getPerfilById, modPerfilUser, deletePerfilUser, getPerfilByUsuario } = require('../controllers/perfilUsuario');
 const { validarCampos } = require('../middlewares/validarCampos');
 const { validarJWT } = require('../middlewares/validarJWT');
 const { verifyPerfilId } = require('../helpers/verifyPerfiles');
@@ -22,6 +22,12 @@ router.get('/:id',[
     param('id').custom(verifyPerfilId),
     validarCampos
 ],getPerfilById)
+
+router.get('/usuario/:id',[
+    param('id','El ID no puede estar vacio').not().isEmpty(),
+    param('id', 'No es un ID valido').isMongoId(),
+    validarCampos
+],getPerfilByUsuario)
 
 router.post('/',[
     validarJWT,

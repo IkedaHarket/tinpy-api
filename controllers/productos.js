@@ -82,7 +82,7 @@ const crearProducto = async(req,res) =>{
         const productoData = {
             usuarioAutor: req.usuario._id,
             nombre: data.nombre || 'Producto genérico',
-            precio: data.precio || 00,
+            precio: data.precio || 0,
             imagenPrincipal:data.imagenPrincipal,
             descripcion:data.descripcion || '',
             numeroLikes:0,
@@ -182,7 +182,7 @@ const deleteProducto = async(req,res) =>{
             })
         }
         if(oldProducto.imagenPrincipal != 'defaultProducto.png') deleteImg(oldProducto.imagenPrincipal)
-        
+
         const producto = await Producto.findByIdAndDelete(id,{new:true});
 
         return res.status(200).json({
