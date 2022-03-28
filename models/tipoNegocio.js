@@ -1,5 +1,5 @@
 /*
-    Perfil Tipo Negocio Schema
+    Tipo Negocio Schema
 */
 
 const {Schema, model} = require('mongoose');

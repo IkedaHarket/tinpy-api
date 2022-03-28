@@ -18,6 +18,7 @@ class Server {
             estadosAnimo:     '/api/estados-animo',
             horarios:         '/api/horarios',
             comentarios:      '/api/comentarios',
+            productos:        '/api/productos',
         };
         
         this.conectarDB();
@@ -48,6 +49,7 @@ class Server {
         this.app.use(this.paths.estadosAnimo,   require('../routes/estadosAnimos'));
         this.app.use(this.paths.horarios,       require('../routes/horarios'));
         this.app.use(this.paths.comentarios,    require('../routes/comentarios'));
+        this.app.use(this.paths.productos,      require('../routes/productos'));
     }
     listen(){//Escucha
         this.app.listen(this.port,()=>{

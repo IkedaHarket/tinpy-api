@@ -34,5 +34,5 @@ const fileUpload = (req,res,next) =>{
 }
 
 module.exports = {
-    fileUpload
+    fileUpload,
 }
