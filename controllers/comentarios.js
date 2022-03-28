@@ -1,10 +1,10 @@
 /*
     Categoria Producto Controller
 */
-const { datacatalog } = require('googleapis/build/src/apis/datacatalog');
-const { isAutorComentario } = require('../helpers/verifyComentarios');
+const { isAutorComentario, verifyPerfilLike, verifyPerfilDislike } = require('../helpers/verifyComentarios');
 const { getIdPerfilByIdUser } = require('../helpers/verifyPerfiles');
 const { verifyUserAdmin } = require('../helpers/verifyUsers');
+const { findById } = require('../models/comentarios');
 const Comentario = require('../models/comentarios');
 
 
@@ -128,6 +128,90 @@ const modComentario= async (req,res) => {
         return res.status(500).json({ msg: "Error interno del servidor" });
     }
 }
+const agregarLike = async (req,res) =>{
+    try {
+        const {id} = req.params;
+        const perfil = await getIdPerfilByIdUser(req.uid);
+
+        const perfilLike = await verifyPerfilLike(id,perfil._id)
+        if(perfilLike) return res.status(200).json({ok:false,msg:'Ya diste like'});
+
+        const comentario = await Comentario.findByIdAndUpdate(id,{$addToSet:{likes:perfil._id},$inc:{numeroLikes:1}},{new:true});
+        comentario.save();
+
+        return res.status(201).json({
+            ok: true,
+            msg:"Like Agregado",
+            comentario
+          });  
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ msg: "Error interno del servidor" });
+    }
+}
+const removeLike = async(req,res) => {
+    try {
+        const {id} = req.params;
+        const perfil = await getIdPerfilByIdUser(req.uid);
+
+        const perfilLike = await verifyPerfilLike(id,perfil._id)
+        if(!perfilLike) return res.status(200).json({ok:false,msg:'No tienes un like en este comentario'});
+
+        const comentario = await Comentario.findByIdAndUpdate(id,{$pull:{likes:perfil._id},$inc:{numeroLikes:-1}},{new:true})
+        comentario.save();
+
+        return res.status(201).json({
+            ok: true,
+            msg:"Like quitado",
+            comentario
+          });  
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ msg: "Error interno del servidor" });
+    }
+}
+const agregarDislike = async (req,res) =>{
+    try {
+        const {id} = req.params;
+        const perfil = await getIdPerfilByIdUser(req.uid);
+
+        const perfilDislike = await verifyPerfilDislike(id,perfil._id)
+        if(perfilDislike) return res.status(200).json({ok:false,msg:'Ya diste dislike'});
+
+        const comentario = await Comentario.findByIdAndUpdate(id,{$addToSet:{dislikes:perfil._id},$inc:{numeroDislikes:1}},{new:true});
+        comentario.save();
+
+        return res.status(201).json({
+            ok: true,
+            msg:"Dislike Agregado",
+            comentario
+          });  
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ msg: "Error interno del servidor" });
+    }
+}
+const removeDislike = async(req,res) => {
+    try {
+        const {id} = req.params;
+        const perfil = await getIdPerfilByIdUser(req.uid);
+
+        const perfilDislike = await verifyPerfilDislike(id,perfil._id)
+        if(!perfilDislike) return res.status(200).json({ok:false,msg:'No tienes un dislike en este comentario'});
+
+        const comentario = await Comentario.findByIdAndUpdate(id,{$pull:{dislikes:perfil._id},$inc:{numeroDislikes:-1}},{new:true})
+        comentario.save();
+        
+        return res.status(201).json({
+            ok: true,
+            msg:"Dislike quitado",
+            comentario
+          });  
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ msg: "Error interno del servidor" });
+    }
+}
 const deleteComentario = async(req,res) =>{
     try {
         const {id} = req.params
@@ -153,5 +237,9 @@ module.exports = {
     getComentarioById,
     crearComentario,
     modComentario,
+    agregarLike,
+    removeLike,
+    agregarDislike,
+    removeDislike,    
     deleteComentario,
 }

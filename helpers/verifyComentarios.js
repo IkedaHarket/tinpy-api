@@ -15,7 +15,25 @@ const isAutorComentario = async(req,idComentario) =>{
     if(perfil._id == comentario.perfilUsuario) return true
     return false;
 }
+const verifyPerfilLike = async(idComentario,idPerfil) => {
+    const comentario = await Comentario.findById(idComentario)
+    let existe = false;
+    comentario.likes.map(perfil=>{
+        if (perfil.equals(idPerfil)) existe = true;
+    })
+    return existe;
+}
+const verifyPerfilDislike = async(idComentario,idPerfil) => {
+    const comentario = await Comentario.findById(idComentario)
+    let existe = false;
+    comentario.dislikes.map(perfil=>{
+        if (perfil.equals(idPerfil)) existe = true;
+    })
+    return existe;
+}
 module.exports = {
     verifyComentarioById,
-    isAutorComentario
+    isAutorComentario,
+    verifyPerfilLike,
+    verifyPerfilDislike,
 }

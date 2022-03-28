@@ -1,7 +1,7 @@
 
 const { Router } = require('express');
 const { check,param } = require('express-validator');
-const { crearComentario, getAllComentarios, getComentariosPaginate, getComentarioById, modComentario, deleteComentario } = require('../controllers/comentarios');
+const { crearComentario, getAllComentarios, getComentariosPaginate, getComentarioById, modComentario, deleteComentario, agregarLike, removeLike, agregarDislike, removeDislike } = require('../controllers/comentarios');
 const { verifyComentarioById } = require('../helpers/verifyComentarios');
 const { verifyEstadosAnimoById } = require('../helpers/verifyEstadosAnimos');
 
@@ -37,6 +37,37 @@ router.put('/:id',[
     check('estadoAnimo').custom(verifyEstadosAnimoById),
     validarCampos
 ],modComentario)
+
+router.put('/add-like/:id',[
+    validarJWT,
+    param('id','El ID no puede estar vacio').not().isEmpty(),
+    param('id', 'No es un ID valido').isMongoId(),
+    param('id').custom(verifyComentarioById),
+    validarCampos
+],agregarLike)
+router.put('/remove-like/:id',[
+    validarJWT,
+    param('id','El ID no puede estar vacio').not().isEmpty(),
+    param('id', 'No es un ID valido').isMongoId(),
+    param('id').custom(verifyComentarioById),
+    validarCampos
+],removeLike)
+
+router.put('/add-dislike/:id',[
+    validarJWT,
+    param('id','El ID no puede estar vacio').not().isEmpty(),
+    param('id', 'No es un ID valido').isMongoId(),
+    param('id').custom(verifyComentarioById),
+    validarCampos
+],agregarDislike)
+router.put('/remove-dislike/:id',[
+    validarJWT,
+    param('id','El ID no puede estar vacio').not().isEmpty(),
+    param('id', 'No es un ID valido').isMongoId(),
+    param('id').custom(verifyComentarioById),
+    validarCampos
+],removeDislike)
+
 router.delete('/:id',[
     validarJWT,
     param('id','El ID no puede estar vacio').not().isEmpty(),
