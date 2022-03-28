@@ -2,4 +2,4 @@
 /uploads/*.jpeg
 /uploads/*.png
 
-./env
+.env
