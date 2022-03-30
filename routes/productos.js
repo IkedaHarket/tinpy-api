@@ -1,7 +1,7 @@
 
 const {Router} = require('express');
 const { check, param } = require('express-validator');
-const { crearProducto, getAllProductos, getProductosPaginate, getProductoById, modProducto, modEstadoProduto, deleteProducto } = require('../controllers/productos');
+const { crearProducto, getAllProductos, getProductosPaginate, getProductoById, modProducto, modEstadoProduto, deleteProducto, addLikeProducto, removeLikeProducto } = require('../controllers/productos');
 const { verifyProductoById } = require('../helpers/verifyProductos');
 const { fileUpload } = require('../middlewares/fileUpload');
 const { validarCampos } = require('../middlewares/validarCampos');
@@ -41,6 +41,21 @@ router.put('/estado/:id',[
     param('id').custom(verifyProductoById),
     validarCampos
 ],modEstadoProduto)
+
+router.put('/add-like/:id',[
+    validarJWT,
+    param('id','El ID no puede estar vacio').not().isEmpty(),
+    param('id', 'No es un ID valido').isMongoId(),
+    param('id').custom(verifyProductoById),
+    validarCampos
+],addLikeProducto)
+router.put('/remove-like/:id',[
+    validarJWT,
+    param('id','El ID no puede estar vacio').not().isEmpty(),
+    param('id', 'No es un ID valido').isMongoId(),
+    param('id').custom(verifyProductoById),
+    validarCampos
+],removeLikeProducto)
 
 router.delete('/:id',[
     validarJWT,
