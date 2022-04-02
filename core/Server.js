@@ -20,6 +20,7 @@ class Server {
             comentarios:      '/api/comentarios',
             productos:        '/api/productos',
             redes:            '/api/redes',
+            negocio:          '/api/negocios',
         };
         
         this.conectarDB();
@@ -52,6 +53,7 @@ class Server {
         this.app.use(this.paths.comentarios,    require('../routes/comentarios'));
         this.app.use(this.paths.productos,      require('../routes/productos'));
         this.app.use(this.paths.redes,          require('../routes/redes'));
+        this.app.use(this.paths.negocio,        require('../routes/negocio'));
     }
     listen(){//Escucha
         this.app.listen(this.port,()=>{

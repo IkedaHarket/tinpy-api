@@ -9,6 +9,11 @@ const ComentariosSchema = new Schema({
     type: String,
     required: [true, "El titulo es obligatorio"],
   },
+  negocio: {
+    type: Schema.Types.ObjectId,
+    ref: "Negocio",
+    required: [true, "El negocio del comentario es obligatorio"],
+  },
   perfilUsuario: {
     type: Schema.Types.ObjectId,
     ref: "PerfilUsuario",

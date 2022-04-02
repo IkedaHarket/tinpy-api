@@ -1,9 +1,10 @@
 
 const { Router } = require('express');
 const { check,param } = require('express-validator');
-const { crearComentario, getAllComentarios, getComentariosPaginate, getComentarioById, modComentario, deleteComentario, agregarLike, removeLike, agregarDislike, removeDislike } = require('../controllers/comentarios');
+const { crearComentario, getAllComentarios, getComentariosPaginate, getComentarioById, modComentario, deleteComentario, agregarLike, removeLike, agregarDislike, removeDislike, getComentarioByIdNegocio, getAllComentariosByIdNegocio, getComentariosByIdNegocioPaginate } = require('../controllers/comentarios');
 const { verifyComentarioById } = require('../helpers/verifyComentarios');
 const { verifyEstadosAnimoById } = require('../helpers/verifyEstadosAnimos');
+const { verifyNegocioById } = require('../helpers/verifyNegocio');
 
 const { validarCampos } = require('../middlewares/validarCampos');
 const { validarJWT } = require('../middlewares/validarJWT');
@@ -20,11 +21,27 @@ router.get('/:id',[
     validarCampos
 ],getComentarioById)
 
+router.get('/negocio-comentarios-all/:idNegocio',[
+    param('idNegocio','El ID no puede estar vacio').not().isEmpty(),
+    param('idNegocio', 'No es un ID valido').isMongoId(),
+    param('idNegocio').custom(verifyNegocioById),
+    validarCampos
+],getAllComentariosByIdNegocio)
+
+router.get('/negocio-comentarios-paginate/:idNegocio',[
+    param('idNegocio','El ID no puede estar vacio').not().isEmpty(),
+    param('idNegocio', 'No es un ID valido').isMongoId(),
+    param('idNegocio').custom(verifyNegocioById),
+    validarCampos
+],getComentariosByIdNegocioPaginate)
+
 router.post('/',[
     validarJWT,
     check('titulo','El titulo es obligatorio').not().isEmpty(),
     check('estadoAnimo','El estado de animo es obligatorio').not().isEmpty(),
     check('estadoAnimo').custom(verifyEstadosAnimoById),
+    check('negocio','El negocio es obligatorio').not().isEmpty(),
+    check('negocio').custom(verifyNegocioById),
     validarCampos
 ],crearComentario);
 router.put('/:id',[
@@ -35,6 +52,8 @@ router.put('/:id',[
     check('titulo','El titulo es obligatorio').not().isEmpty(),
     check('estadoAnimo','El estado de animo es obligatorio').not().isEmpty(),
     check('estadoAnimo').custom(verifyEstadosAnimoById),
+    check('negocio','El negocio es obligatorio').not().isEmpty(),
+    check('negocio').custom(verifyNegocioById),
     validarCampos
 ],modComentario)
 

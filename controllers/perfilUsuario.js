@@ -79,7 +79,7 @@ const crearPerfil = async(req,res) => {
         if(await verifyPerfilUserByIdUser(idUser)){
             return res.status(200).json({
                 ok:false,
-                msg:'Este usuario ya tiene un perfil asociados'
+                msg:'Este usuario ya tiene un perfil asociado'
             })
         }
         data.img = 'default.png'

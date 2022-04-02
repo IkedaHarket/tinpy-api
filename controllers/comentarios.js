@@ -46,7 +46,10 @@ const getComentariosPaginate = async (req, res) => {
       };
       const comentarios = await Comentario.paginate({}, options);
   
-      return res.status(200).json(comentarios);
+      return res.status(200).json({
+          ok:true,
+          comentarios
+      });
     } catch (error) {
       console.log(error);
       return res.status(500).json({
@@ -73,15 +76,65 @@ const getComentarioById = async (req, res) =>{
             msg:"Error interno del servidor"
         })
     }
+};
+const getAllComentariosByIdNegocio = async (req,res) => {
+    try {
+        const comentarios = await Comentario.find({negocio: req.params.idNegocio}).populate([
+            { 
+                path: 'perfilUsuario',
+                model: 'PerfilUsuario',
+                populate:{path:'usuario',model:'Usuario'}
+             },
+            { path: 'estadoAnimo', model: 'EstadosAnimo', select:'nombre' },
+        ]);
+    
+        return res.status(200).json({
+          ok: true,
+          comentarios,
+        });
+      } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+          msg: "Error interno del servidor",
+        });
+      }
+}
+const getComentariosByIdNegocioPaginate = async (req,res) => {
+    try {
+        const options = {
+          page: req.query.page || 1,
+          limit: req.query.limit || 10,     
+          populate:[
+              { 
+                  path: 'perfilUsuario', 
+                  model: 'PerfilUsuario',
+                  populate:{path:'usuario',model:'Usuario'}
+               },
+              { path: 'estadoAnimo', model: 'EstadosAnimo', select:'nombre' },
+          ]   
+        };
+        const comentarios = await Comentario.paginate({negocio: req.params.idNegocio}, options);
+    
+        return res.status(200).json({
+            ok:true,
+            comentarios
+        });
+      } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+          msg: "Error interno del servidor",
+        });
+      }
 }
 const crearComentario = async (req, res) => {
     try {
-      const { titulo,texto,estadoAnimo } = req.body;
+      const { titulo,texto,estadoAnimo,negocio } = req.body;
       const perfil = await getIdPerfilByIdUser(req.uid);
       if(!perfil) return res.status(401).json({ok:false,msg:'No puedes comentar si no tienes un perfil'})
 
       const comentarioData = {
           titulo,
+          negocio,
           perfilUsuario :perfil._id,
           texto         :texto || '',
           numeroLikes   :0,
@@ -90,7 +143,6 @@ const crearComentario = async (req, res) => {
       }
       const comentario = new Comentario(comentarioData);
       await comentario.save();
-        //TODO Agregar comentario al negocio
 
       return res.status(201).json({
         ok: true,
@@ -235,6 +287,8 @@ module.exports = {
     getAllComentarios,
     getComentariosPaginate,
     getComentarioById,
+    getAllComentariosByIdNegocio,
+    getComentariosByIdNegocioPaginate,
     crearComentario,
     modComentario,
     agregarLike,

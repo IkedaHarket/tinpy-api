@@ -1,5 +1,5 @@
 /*
-    Perfil Usuario Schema
+    Negocio Schema
 */
 
 const {Schema, model} = require('mongoose');
@@ -20,7 +20,7 @@ const NegocioSchema =  new Schema(
       },
       img: {
         type: String,
-        default: 'default.png',
+        default: 'defaultNegocio.png',
       },
       nombre:{
         type: String,
@@ -56,12 +56,6 @@ const NegocioSchema =  new Schema(
         type:Boolean,
         default:false
       },
-      comentarios:[
-        {
-            type: Schema.Types.ObjectId,
-            ref: "Comentario",
-        }
-      ],
       horario:{
         type: Schema.Types.ObjectId,
         ref: "Horarios",
