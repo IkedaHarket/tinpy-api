@@ -1,6 +1,5 @@
 
 const Producto = require('../models/productos')
-const { verifyCategoriaById } = require('../helpers/verifyCategorias');
 const { verifyUserAdmin } = require('../helpers/verifyUsers');
 const { deleteImg } = require('../helpers/deleteImg');
 const { verifyUsuarioLikeProducto } = require('../helpers/verifyProductos');

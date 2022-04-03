@@ -6,10 +6,9 @@ const Negocio = require("../models/negocio");
         const negocios = await Negocio.find().populate([
             { path: 'usuario',model: 'Usuario'},
             { path: 'tipoNegocio', model: 'TipoNegocio', select:'nombre' },
-            // { path: 'productos', model: 'Producto' },
             { path: 'direccion', model: 'Direccion' },
             { path: 'horario', model: 'Horarios' },
-            { path: 'redes', model: 'Redes' },
+            { path: 'redes', model: 'Redes' }, //TODO agregar negocio a modelo redes
         ]);
     
         return res.status(200).json({

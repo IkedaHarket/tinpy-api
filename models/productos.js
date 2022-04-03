@@ -7,10 +7,6 @@ const mongoosePaginate = require('mongoose-paginate-v2')
 
 const ProductosSchema =  new Schema(
     {
-      // usuarioAutor:{
-      //   type: Schema.Types.ObjectId,
-      //   ref: "Usuario",
-      // },
       negocio: {
         type: Schema.Types.ObjectId,
         ref: "Negocio",
