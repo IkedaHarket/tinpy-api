@@ -7,9 +7,14 @@ const mongoosePaginate = require('mongoose-paginate-v2')
 
 const ProductosSchema =  new Schema(
     {
-      usuarioAutor:{
+      // usuarioAutor:{
+      //   type: Schema.Types.ObjectId,
+      //   ref: "Usuario",
+      // },
+      negocio: {
         type: Schema.Types.ObjectId,
-        ref: "Usuario",
+        ref: "Negocio",
+        required: [true, "El negocio del producto es obligatorio"],
       },
       nombre: {
         type: String,

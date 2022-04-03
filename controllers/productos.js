@@ -4,12 +4,12 @@ const { verifyCategoriaById } = require('../helpers/verifyCategorias');
 const { verifyUserAdmin } = require('../helpers/verifyUsers');
 const { deleteImg } = require('../helpers/deleteImg');
 const { verifyUsuarioLikeProducto } = require('../helpers/verifyProductos');
+const { getNegocioByIdUser } = require('../helpers/verifyNegocio');
 
 const getAllProductos = async(req,res) =>{
     try {
 
         const productos = await Producto.find({estado:true}).populate([
-            { path: 'usuarioAutor', model: 'Usuario' },
             { path: 'categoria', model: 'CategoriaProducto',select:'nombre' },
         ]);
 
@@ -27,7 +27,6 @@ const getProductosPaginate = async (req, res) => {
         page: req.query.page || 1,
         limit: req.query.limit || 10,
         populate:[
-            { path: 'usuarioAutor', model: 'Usuario' },
             { path: 'categoria', model: 'CategoriaProducto',select:'nombre' },
         ]
         
@@ -47,7 +46,7 @@ const getProductoById = async (req, res) =>{
     try {
         const {id} = req.params;
         const producto = await Producto.findById(id).populate([
-            { path: 'usuarioAutor', model: 'Usuario' },
+            { path: 'negocio', model: 'Negocio' },
             { path: 'categoria', model: 'CategoriaProducto',select:'nombre' },
       ]); 
         
@@ -58,6 +57,43 @@ const getProductoById = async (req, res) =>{
             msg:"Error interno del servidor"
         })
     }
+}
+const getAllProductosByIdNegocio = async (req,res) => {
+    try {
+        const productos = await Producto.find({negocio: req.params.idNegocio}).populate([
+            { path: 'categoria', model: 'CategoriaProducto',select:'nombre' },
+        ]);
+    
+        return res.status(200).json({
+          ok: true,
+          productos,
+        });
+      } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+          msg: "Error interno del servidor",
+        });
+      }
+}
+const getProductosByIdNegocioPaginate = async (req,res) => {
+    try {
+        const options = {
+          page: req.query.page || 1,
+          limit: req.query.limit || 10,     
+          populate:[{ path: 'categoria', model: 'CategoriaProducto',select:'nombre' },]   
+        };
+        const productos = await Producto.paginate({negocio: req.params.idNegocio}, options);
+
+        return res.status(200).json({
+            ok:true,
+            productos
+        });
+      } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+          msg: "Error interno del servidor",
+        });
+      }
 }
 const addLikeProducto = async(req,res) =>{
     try {
@@ -102,34 +138,24 @@ const removeLikeProducto = async(req,res) => {
 const crearProducto = async(req,res) =>{
     try {
         const {...data} = req.body;
-
-        data.imagenPrincipal = 'defaultProducto.png'
-        if(req.file){
-            data.imagenPrincipal = req.file.filename;
+        const negocio = await getNegocioByIdUser(req.usuario._id);
+        if(!negocio) {
+            if(req.file) deleteImg(req.file.filename)
+            return res.status(401).json({
+                ok:false,
+                msg:'No tienes un negocio vinculado a tu cuenta',
+            })
         }
-        try {
-           data.precio = parseInt(data.precio)
-        } catch (error) {
-            return res.status(400).json({ok:false,msg:'El precio no es valido'});
-        }
-        if(data.categoria){
-            try {
-                await verifyCategoriaById(data.categoria);
-            } catch (error) {
-                return res.status(404).json({ok:false,msg:'Esta categoria no existe'});
-            }
-        }
-
         const productoData = {
-            usuarioAutor: req.usuario._id,
-            nombre: data.nombre || 'Producto genérico',
+            negocio: negocio._id,
+            nombre: data.nombre,
             precio: data.precio || 0,
-            imagenPrincipal:data.imagenPrincipal,
+            imagenPrincipal:  req?.file?.filename || 'defaultProducto.png',
             descripcion:data.descripcion || '',
             numeroLikes:0,
             likes: [],
             estado:true,
-            categoria:data.categoria || '',
+            categoria:data.categoria,
         }
         const producto = new Producto({...productoData});
         await producto.save();
@@ -148,21 +174,25 @@ const modProducto = async(req,res) =>{
     try {
         const { id } = req.params;
         const {...data} = req.body;
+
         const oldProducto = await Producto.findById(id);
         const userAdmin = await verifyUserAdmin(req)
-        if(!(oldProducto.usuarioAutor.equals(req.usuario._id) || userAdmin)){
+        const negocio = await getNegocioByIdUser(req.usuario._id);
+
+        if(!(oldProducto.negocio.equals(negocio._id) || userAdmin)){
+            if(req.file) deleteImg(req.file.filename)
             return res.status(401).json({
                 ok:false,
                 msg:'Usted no tiene permitido hacer esto >:c'
             })
         }
+
         if(oldProducto.imagenPrincipal != 'defaultProducto.png') deleteImg(oldProducto.imagenPrincipal)
         data.imagenPrincipal = 'defaultProducto.png'
         if(req.file){
             data.imagenPrincipal = req.file.filename;
         }
         const productoData = {
-            usuarioAutor: req.usuario._id,
             nombre: data.nombre || 'Producto genérico',
             precio: data.precio || 0,
             imagenPrincipal:data.imagenPrincipal,
@@ -191,7 +221,8 @@ const modEstadoProduto = async(req,res) => {
 
         const oldProducto = await Producto.findById(id);
         const userAdmin = await verifyUserAdmin(req)
-        if(!(oldProducto.usuarioAutor.equals(req.usuario._id) || userAdmin)){
+        const negocio = await getNegocioByIdUser(req.usuario._id);
+        if(!(oldProducto.negocio.equals(negocio._id) || userAdmin)){
             return res.status(401).json({
                 ok:false,
                 msg:'Usted no tiene permitido hacer esto >:c'
@@ -216,7 +247,8 @@ const deleteProducto = async(req,res) =>{
         const { id } = req.params;
         const oldProducto = await Producto.findById(id);
         const userAdmin = await verifyUserAdmin(req)
-        if(!(oldProducto.usuarioAutor.equals(req.usuario._id) || userAdmin)){
+        const negocio = await getNegocioByIdUser(req.usuario._id);
+        if(!(oldProducto.negocio.equals(negocio._id) || userAdmin)){
             return res.status(401).json({
                 ok:false,
                 msg:'Usted no tiene permitido hacer esto >:c'
@@ -241,6 +273,8 @@ module.exports = {
     getAllProductos,
     getProductosPaginate,
     getProductoById,
+    getAllProductosByIdNegocio,
+    getProductosByIdNegocioPaginate,
     addLikeProducto,
     removeLikeProducto,
     crearProducto,

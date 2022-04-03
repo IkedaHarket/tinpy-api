@@ -38,12 +38,12 @@ const NegocioSchema =  new Schema(
           type:Number,
           default: 0
       },
-      productos:[
-        {
-            type: Schema.Types.ObjectId,
-            ref: "Producto",
-        }
-      ],
+      // productos:[
+      //   {
+      //       type: Schema.Types.ObjectId,
+      //       ref: "Producto",
+      //   }
+      // ],
       direccion:{
         type: Schema.Types.ObjectId,
         ref: "Direccion",

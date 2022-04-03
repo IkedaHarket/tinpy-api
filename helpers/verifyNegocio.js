@@ -13,7 +13,13 @@ const verifyNegocioById = async(id) =>{
         throw new Error(`El id ${id} no existe`);
     }
 }
+const getNegocioByIdUser = async(usuario) =>{
+    const negocio = await Negocio.findOne({usuario})
+    if(!negocio)return false;
+    return negocio;
+}
 module.exports = {
     verifyNegocioByIdUser,
-    verifyNegocioById
+    verifyNegocioById,
+    getNegocioByIdUser
 }

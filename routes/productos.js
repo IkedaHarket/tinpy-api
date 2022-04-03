@@ -1,7 +1,9 @@
 
 const {Router} = require('express');
 const { check, param } = require('express-validator');
-const { crearProducto, getAllProductos, getProductosPaginate, getProductoById, modProducto, modEstadoProduto, deleteProducto, addLikeProducto, removeLikeProducto } = require('../controllers/productos');
+const { crearProducto, getAllProductos, getProductosPaginate, getProductoById, modProducto, modEstadoProduto, deleteProducto, addLikeProducto, removeLikeProducto, getProductosByIdNegocioPaginate, getAllProductosByIdNegocio } = require('../controllers/productos');
+const { verifyCategoriaById } = require('../helpers/verifyCategorias');
+const { verifyNegocioById } = require('../helpers/verifyNegocio');
 const { verifyProductoById } = require('../helpers/verifyProductos');
 const { fileUpload } = require('../middlewares/fileUpload');
 const { validarCampos } = require('../middlewares/validarCampos');
@@ -21,9 +23,27 @@ router.get('/:id',[
     validarCampos
 ],getProductoById)
 
+router.get('/negocio-productos-all/:idNegocio',[
+    param('idNegocio','El ID no puede estar vacio').not().isEmpty(),
+    param('idNegocio', 'No es un ID valido').isMongoId(),
+    param('idNegocio').custom(verifyNegocioById),
+    validarCampos
+],getAllProductosByIdNegocio)
+
+router.get('/negocio-productos-paginate/:idNegocio',[
+    param('idNegocio','El ID no puede estar vacio').not().isEmpty(),
+    param('idNegocio', 'No es un ID valido').isMongoId(),
+    param('idNegocio').custom(verifyNegocioById),
+    validarCampos
+],getProductosByIdNegocioPaginate)
+
 router.post('/',[
     validarJWT,
     fileUpload,
+    check('nombre','El nombre es obligatorio').not().isEmpty(),
+    check('precio','El precio es obligatorio').not().isEmpty(),
+    check('categoria','La categoria es obligatoria').isMongoId(),
+    check('categoria').custom(verifyCategoriaById),
     validarCampos
 ],crearProducto)
 router.put('/:id',[
@@ -32,6 +52,10 @@ router.put('/:id',[
     param('id', 'No es un ID valido').isMongoId(),
     param('id').custom(verifyProductoById),
     fileUpload,
+    check('nombre','El nombre es obligatorio').not().isEmpty(),
+    check('precio','El precio es obligatorio').not().isEmpty(),
+    check('categoria','La categoria es obligatoria').isMongoId(),
+    check('categoria').custom(verifyCategoriaById),
     validarCampos
 ],modProducto)
 router.put('/estado/:id',[

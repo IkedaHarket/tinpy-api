@@ -6,7 +6,7 @@ const Negocio = require("../models/negocio");
         const negocios = await Negocio.find().populate([
             { path: 'usuario',model: 'Usuario'},
             { path: 'tipoNegocio', model: 'TipoNegocio', select:'nombre' },
-            { path: 'productos', model: 'Producto' },
+            // { path: 'productos', model: 'Producto' },
             { path: 'direccion', model: 'Direccion' },
             { path: 'horario', model: 'Horarios' },
             { path: 'redes', model: 'Redes' },
@@ -40,16 +40,15 @@ const crearNegocio = async(req,res) =>{
                 msg:'Este negocio ya tiene un usuario asociado'
             })
         }
-        console.log(data)
         const negocioData = {
             usuario: req.usuario._id,
             tipoNegocio: data.tipoNegocio,
-            img: req.file.filename || 'defaultNegocio.png',
+            img: req?.file?.filename || 'defaultNegocio.png',
             nombre:data.nombre,
             totalEstrellas: 0,
             estrellas: [],
             promedioEstrellas:0,
-            productos:[],
+            // productos:[],
             direccion:null,
             estado:true,
             verificado:false,
