@@ -50,10 +50,6 @@ const NegocioSchema =  new Schema(
         type:Boolean,
         default:false
       },
-      horario:{
-        type: Schema.Types.ObjectId,
-        ref: "Horarios",
-      },
       telefono: {
         type: String,
       },
@@ -62,11 +58,7 @@ const NegocioSchema =  new Schema(
       },
       descripcion:{
           type: String,
-      },
-      // redes:[{
-      //   type: Schema.Types.ObjectId,
-      //   ref: "Redes",
-      // }]
+      }
     },
     {
       timestamps: true,

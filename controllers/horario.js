@@ -1,6 +1,8 @@
 /*
     Categoria Producto Controller
 */
+const { verifyHorarioByIdNegocio } = require('../helpers/verifyHorarios');
+const { getNegocioByIdUser } = require('../helpers/verifyNegocio');
 const Horario = require('../models/horarios');
 
 const getAllHorarios = async (req, res) => {
@@ -51,8 +53,20 @@ const getHorarioById = async (req, res) =>{
 const crearHorario = async (req, res) => {
     try {
       const { ...data } = req.body;
-    
-      const horarios = new Horario(data);
+      const negocio = await getNegocioByIdUser(req.usuario._id);
+      if(!negocio) {
+          return res.status(401).json({
+              ok:false,
+              msg:'No tienes un negocio vinculado a tu cuenta',
+          })
+      }
+      if(await verifyHorarioByIdNegocio(negocio._id)){
+        return res.status(400).json({
+            ok:false,
+            msg:'Este negocio ya tiene un horario asociado'
+        })
+      }
+      const horarios = new Horario({...data,negocio:negocio._id});
       await horarios.save();
   
       return res.status(201).json({
@@ -68,9 +82,20 @@ const crearHorario = async (req, res) => {
   };
 const modHorario = async(req,res) =>{
     try {
-        const {...data} = req.body;
+        const {negocio:extraerNegocioDeData ,...data} = req.body;
         const {id} = req.params;
-
+        const oldHorario = await Horario.findById(id);
+        const negocio = await getNegocioByIdUser(req.usuario._id);
+        if(!negocio) {
+            return res.status(401).json({
+                ok:false,
+                msg:'No tienes un negocio vinculado a tu cuenta',
+            })
+        }
+        if(!negocio._id.equals(oldHorario.negocio)) return res.status(401).json({
+                ok:false,
+                msg:'Solo puedes editar el horario de tu negocio',
+        })
         const horarios = await Horario.findByIdAndUpdate(id,{...data},{new:true});
 
         return res.status(200).json({
@@ -89,6 +114,19 @@ const modHorario = async(req,res) =>{
 const deleteHorario = async(req,res) =>{
     try {
         const {id} = req.params;
+
+        const oldHorario = await Horario.findById(id);
+        const negocio = await getNegocioByIdUser(req.usuario._id);
+        if(!negocio) {
+            return res.status(401).json({
+                ok:false,
+                msg:'No tienes un negocio vinculado a tu cuenta',
+            })
+        }
+        if(!negocio._id.equals(oldHorario.negocio)) return res.status(401).json({
+                ok:false,
+                msg:'Solo puedes editar el horario de tu negocio',
+        })
 
         const horarios = await Horario.findByIdAndDelete(id,{new:true});
 

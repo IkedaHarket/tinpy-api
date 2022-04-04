@@ -1,15 +1,24 @@
 const { Router } = require('express');
-const { check } = require('express-validator');
-const { crearNegocio, getAllNegocios } = require('../controllers/negocio');
+const { check, param } = require('express-validator');
+const { crearNegocio, getAllNegocios, getNegociosPaginate, getNegocioById } = require('../controllers/negocio');
 const { fileUpload } = require('../middlewares/fileUpload');
 
 const { validarCampos } = require('../middlewares/validarCampos');
 const { validarJWT } = require('../middlewares/validarJWT');
 const { verifyTipoNegocioById } = require('../helpers/verifyTipoNegocio');
+const { verifyNegocioById } = require('../helpers/verifyNegocio');
 
 const router =  new Router();
 
 router.get('/all',getAllNegocios);
+router.get('/paginate',getNegociosPaginate);
+
+router.get('/:id',[
+    param('id','El ID no puede estar vacio').not().isEmpty(),
+    param('id', 'No es un ID valido').isMongoId(),
+    param('id').custom(verifyNegocioById),
+    validarCampos
+],getNegocioById)
 
 router.post("/",[
     validarJWT,

@@ -7,6 +7,12 @@ const mongoosePaginate = require('mongoose-paginate-v2')
 
 const HorariosSchema =  new Schema(
     {
+      negocio: {
+        type: Schema.Types.ObjectId,
+        ref: "Negocio",
+        required: [true, "El negocio del comentario es obligatorio"],
+        unique:true
+      },
       lunes_inicio: {
         type: String,
       },

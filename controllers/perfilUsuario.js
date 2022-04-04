@@ -77,7 +77,7 @@ const crearPerfil = async(req,res) => {
         const {_id: idUser} = req.usuario;
 
         if(await verifyPerfilUserByIdUser(idUser)){
-            return res.status(200).json({
+            return res.status(400).json({
                 ok:false,
                 msg:'Este usuario ya tiene un perfil asociado'
             })

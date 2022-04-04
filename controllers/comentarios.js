@@ -4,7 +4,6 @@
 const { isAutorComentario, verifyPerfilLike, verifyPerfilDislike } = require('../helpers/verifyComentarios');
 const { getIdPerfilByIdUser } = require('../helpers/verifyPerfiles');
 const { verifyUserAdmin } = require('../helpers/verifyUsers');
-const { findById } = require('../models/comentarios');
 const Comentario = require('../models/comentarios');
 
 
@@ -183,8 +182,11 @@ const modComentario= async (req,res) => {
 const agregarLike = async (req,res) =>{
     try {
         const {id} = req.params;
-        const perfil = await getIdPerfilByIdUser(req.uid);
-
+        const perfil = await getIdPerfilByIdUser(req.usuario._id);
+        if(!perfil) return res.status(401).json({
+          ok:false,
+          msg:'No tienes un perfil con el que dar like'
+        })
         const perfilLike = await verifyPerfilLike(id,perfil._id)
         if(perfilLike) return res.status(200).json({ok:false,msg:'Ya diste like'});
 
@@ -205,7 +207,10 @@ const removeLike = async(req,res) => {
     try {
         const {id} = req.params;
         const perfil = await getIdPerfilByIdUser(req.uid);
-
+        if(!perfil) return res.status(401).json({
+          ok:false,
+          msg:'No tienes un perfil con el que quitar like'
+        })
         const perfilLike = await verifyPerfilLike(id,perfil._id)
         if(!perfilLike) return res.status(200).json({ok:false,msg:'No tienes un like en este comentario'});
 
@@ -226,7 +231,10 @@ const agregarDislike = async (req,res) =>{
     try {
         const {id} = req.params;
         const perfil = await getIdPerfilByIdUser(req.uid);
-
+        if(!perfil) return res.status(401).json({
+          ok:false,
+          msg:'No tienes un perfil con el que dar dislike'
+        })
         const perfilDislike = await verifyPerfilDislike(id,perfil._id)
         if(perfilDislike) return res.status(200).json({ok:false,msg:'Ya diste dislike'});
 
@@ -247,7 +255,10 @@ const removeDislike = async(req,res) => {
     try {
         const {id} = req.params;
         const perfil = await getIdPerfilByIdUser(req.uid);
-
+        if(!perfil) return res.status(401).json({
+          ok:false,
+          msg:'No tienes un perfil con el que quitar dislike'
+        })
         const perfilDislike = await verifyPerfilDislike(id,perfil._id)
         if(!perfilDislike) return res.status(200).json({ok:false,msg:'No tienes un dislike en este comentario'});
 

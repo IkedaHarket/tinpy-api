@@ -18,6 +18,7 @@ const getNegocioByIdUser = async(usuario) =>{
     if(!negocio)return false;
     return negocio;
 }
+
 module.exports = {
     verifyNegocioByIdUser,
     verifyNegocioById,
