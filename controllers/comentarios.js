@@ -125,6 +125,55 @@ const getComentariosByIdNegocioPaginate = async (req,res) => {
         });
       }
 }
+const getAllComentariosByIdPerfil = async (req,res) => {
+  try {
+      const comentarios = await Comentario.find({perfilUsuario: req.params.idPerfil}).populate([
+          { 
+              path: 'perfilUsuario',
+              model: 'PerfilUsuario',
+              populate:{path:'usuario',model:'Usuario'}
+           },
+          { path: 'estadoAnimo', model: 'EstadosAnimo', select:'nombre' },
+      ]);
+  
+      return res.status(200).json({
+        ok: true,
+        comentarios,
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        msg: "Error interno del servidor",
+      });
+    }
+}
+const getComentariosByIdPerfilPaginate = async (req,res) => {
+  try {
+      const options = {
+        page: req.query.page || 1,
+        limit: req.query.limit || 10,     
+        populate:[
+            { 
+                path: 'perfilUsuario', 
+                model: 'PerfilUsuario',
+                populate:{path:'usuario',model:'Usuario'}
+             },
+            { path: 'estadoAnimo', model: 'EstadosAnimo', select:'nombre' },
+        ]   
+      };
+      const comentarios = await Comentario.paginate({perfilUsuario: req.params.idPerfil}, options);
+  
+      return res.status(200).json({
+          ok:true,
+          comentarios
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        msg: "Error interno del servidor",
+      });
+    }
+}
 const crearComentario = async (req, res) => {
     try {
       const { titulo,texto,estadoAnimo,negocio } = req.body;
@@ -300,6 +349,8 @@ module.exports = {
     getComentarioById,
     getAllComentariosByIdNegocio,
     getComentariosByIdNegocioPaginate,
+    getAllComentariosByIdPerfil,
+    getComentariosByIdPerfilPaginate,
     crearComentario,
     modComentario,
     agregarLike,

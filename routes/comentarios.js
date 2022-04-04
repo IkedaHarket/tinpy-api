@@ -1,10 +1,11 @@
 
 const { Router } = require('express');
 const { check,param } = require('express-validator');
-const { crearComentario, getAllComentarios, getComentariosPaginate, getComentarioById, modComentario, deleteComentario, agregarLike, removeLike, agregarDislike, removeDislike, getComentarioByIdNegocio, getAllComentariosByIdNegocio, getComentariosByIdNegocioPaginate } = require('../controllers/comentarios');
+const { crearComentario, getAllComentarios, getComentariosPaginate, getComentarioById, modComentario, deleteComentario, agregarLike, removeLike, agregarDislike, removeDislike, getComentarioByIdNegocio, getAllComentariosByIdNegocio, getComentariosByIdNegocioPaginate, getAllComentariosByIdPerfil, getComentariosByIdPerfilPaginate } = require('../controllers/comentarios');
 const { verifyComentarioById } = require('../helpers/verifyComentarios');
 const { verifyEstadosAnimoById } = require('../helpers/verifyEstadosAnimos');
 const { verifyNegocioById } = require('../helpers/verifyNegocio');
+const { verifyPerfilId } = require('../helpers/verifyPerfiles');
 
 const { validarCampos } = require('../middlewares/validarCampos');
 const { validarJWT } = require('../middlewares/validarJWT');
@@ -34,6 +35,20 @@ router.get('/negocio-comentarios-paginate/:idNegocio',[
     param('idNegocio').custom(verifyNegocioById),
     validarCampos
 ],getComentariosByIdNegocioPaginate)
+
+router.get('/perfil-comentarios-all/:idPerfil',[
+    param('idPerfil','El ID no puede estar vacio').not().isEmpty(),
+    param('idPerfil', 'No es un ID valido').isMongoId(),
+    param('idPerfil').custom(verifyPerfilId),
+    validarCampos
+],getAllComentariosByIdPerfil)
+
+router.get('/perfil-comentarios-paginate/:idPerfil',[
+    param('idPerfil','El ID no puede estar vacio').not().isEmpty(),
+    param('idPerfil', 'No es un ID valido').isMongoId(),
+    param('idPerfil').custom(verifyPerfilId),
+    validarCampos
+],getComentariosByIdPerfilPaginate)
 
 router.post('/',[
     validarJWT,
