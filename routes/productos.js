@@ -1,7 +1,7 @@
 
 const {Router} = require('express');
 const { check, param } = require('express-validator');
-const { crearProducto, getAllProductos, getProductosPaginate, getProductoById, modProducto, modEstadoProduto, deleteProducto, addLikeProducto, removeLikeProducto, getProductosByIdNegocioPaginate, getAllProductosByIdNegocio } = require('../controllers/productos');
+const { crearProducto, getAllProductos, getProductosPaginate, getProductoById, modProducto, modEstadoProduto, deleteProducto, addLikeProducto, removeLikeProducto, getProductosByIdNegocioPaginate, getAllProductosByIdNegocio, getProductosByName } = require('../controllers/productos');
 const { verifyCategoriaById } = require('../helpers/verifyCategorias');
 const { verifyNegocioById } = require('../helpers/verifyNegocio');
 const { verifyProductoById } = require('../helpers/verifyProductos');
@@ -22,6 +22,10 @@ router.get('/:id',[
     param('id').custom(verifyProductoById),
     validarCampos
 ],getProductoById)
+router.get('/name/:name',[
+    param('name','El nombre no puede estar vacio').not().isEmpty(),
+    validarCampos
+],getProductosByName)
 
 router.get('/negocio-productos-all/:idNegocio',[
     param('idNegocio','El ID no puede estar vacio').not().isEmpty(),
