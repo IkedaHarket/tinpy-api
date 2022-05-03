@@ -21,9 +21,9 @@ const register = async (req, res) => {
     // //* Guardar usuario
     const usuario = new Usuario({ correo, password, rol: _id });
     await usuario.save();
-
+    console.log('User',usuario);
     // //*Generar token
-    const token = await generarJWT(usuario.uid);
+    const token = await generarJWT(usuario._id);
     return res.status(201).json({
       ok: true,
       usuario,
