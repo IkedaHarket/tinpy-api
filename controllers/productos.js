@@ -60,12 +60,13 @@ const getProductoById = async (req, res) =>{
 const getProductosByName = async (req,res) => {
     try {
         const { name } = req.params;
+
         const productos = await Producto.find({nombre:{'$regex' : name, '$options' : 'i'}})
-    //     .populate([
-    //         { path: 'negocio', model: 'Negocio' },
-    //         { path: 'categoria', model: 'CategoriaProducto',select:'nombre' },
-    //   ]); 
-        res.json({productos,name})
+        .populate([
+            { path: 'negocio', model: 'Negocio' },
+            { path: 'categoria', model: 'CategoriaProducto',select:'nombre' },
+      ])
+        res.json({productos})
     } catch (error) {
         console.log(error);
         return res.status(500).json({
