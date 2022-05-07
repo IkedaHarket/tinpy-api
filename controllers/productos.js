@@ -1,5 +1,6 @@
 
 const Producto = require('../models/productos')
+
 const { verifyUserAdmin } = require('../helpers/verifyUsers');
 const { deleteImg } = require('../helpers/deleteImg');
 const { verifyUsuarioLikeProducto } = require('../helpers/verifyProductos');
@@ -202,17 +203,17 @@ const modProducto = async(req,res) =>{
                 msg:'Usted no tiene permitido hacer esto >:c'
             })
         }
-
         if(oldProducto.imagenPrincipal != 'defaultProducto.png') deleteImg(oldProducto.imagenPrincipal)
         data.imagenPrincipal = 'defaultProducto.png'
         if(req.file){
             data.imagenPrincipal = req.file.filename;
         }
+        
         const productoData = {
-            nombre: data.nombre || 'Producto genérico',
-            precio: data.precio || 0,
+            nombre: data.nombre || oldProducto.nombre,
+            precio: data.precio || oldProducto.precio,
             imagenPrincipal:data.imagenPrincipal,
-            descripcion:data.descripcion || '',
+            descripcion:data.descripcion || oldProducto.descripcion,
             numeroLikes:oldProducto.numeroLikes,
             likes: oldProducto.likes,
             estado:data.estado,

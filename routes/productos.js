@@ -56,10 +56,6 @@ router.put('/:id',[
     param('id', 'No es un ID valido').isMongoId(),
     param('id').custom(verifyProductoById),
     fileUpload,
-    check('nombre','El nombre es obligatorio').not().isEmpty(),
-    check('precio','El precio es obligatorio').not().isEmpty(),
-    check('categoria','La categoria es obligatoria').isMongoId(),
-    check('categoria').custom(verifyCategoriaById),
     validarCampos
 ],modProducto)
 router.put('/estado/:id',[
