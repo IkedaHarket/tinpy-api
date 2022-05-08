@@ -31,6 +31,14 @@ const ProductosSchema =  new Schema(
         type: Schema.Types.ObjectId,
         ref: "PerfilUsuario",
       }],
+      numeroDislikes:{
+        type:Number,
+      },
+      dislikes:[
+        {
+        type: Schema.Types.ObjectId,
+        ref: "PerfilUsuario",
+      }],
       estado:{
           type:Boolean,
           default:true

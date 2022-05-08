@@ -14,7 +14,16 @@ const verifyUsuarioLikeProducto = async(idProducto,idUser) => {
     })
     return existe;
 }
+const verifyUsuarioDislikeProducto = async(idProducto,idUser) => {
+    const producto = await Producto.findById(idProducto)
+    let existe = false;
+    producto.dislikes.map(user=>{
+        if (user.equals(idUser)) existe = true;
+    })
+    return existe;
+}
 module.exports = {
     verifyProductoById,
-    verifyUsuarioLikeProducto
+    verifyUsuarioLikeProducto,
+    verifyUsuarioDislikeProducto
 }

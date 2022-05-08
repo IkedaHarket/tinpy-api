@@ -3,7 +3,7 @@ const Producto = require('../models/productos')
 
 const { verifyUserAdmin } = require('../helpers/verifyUsers');
 const { deleteImg } = require('../helpers/deleteImg');
-const { verifyUsuarioLikeProducto } = require('../helpers/verifyProductos');
+const { verifyUsuarioLikeProducto, verifyUsuarioDislikeProducto } = require('../helpers/verifyProductos');
 const { getNegocioByIdUser } = require('../helpers/verifyNegocio');
 
 const getAllProductos = async(req,res) =>{
@@ -152,6 +152,47 @@ const removeLikeProducto = async(req,res) => {
         return res.status(500).json({ msg: "Error interno del servidor" });
     }
 }
+
+const addDislikeProducto = async(req,res) =>{
+    try {
+        const {id} = req.params;
+
+        const usuarioDislike = await verifyUsuarioDislikeProducto(id,req.usuario._id)
+        if(usuarioDislike) return res.status(200).json({ok:false,msg:'Ya diste dislike'});
+
+        const producto = await Producto.findByIdAndUpdate(id,{$addToSet:{dislikes:req.usuario._id},$inc:{numeroDislikes:1}},{new:true});
+        producto.save();
+
+        return res.status(201).json({
+            ok: true,
+            msg:"Dislike Agregado",
+            producto,
+          });  
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ msg: "Error interno del servidor" });
+    }
+}
+const removeDislikeProducto = async(req,res) => {
+    try {
+        const {id} = req.params;
+
+        const usuarioDislike = await verifyUsuarioDislikeProducto(id,req.usuario._id)
+        if(!usuarioDislike) return res.status(200).json({ok:false,msg:'No tienes un dislike en este producto'});
+
+        const producto = await Producto.findByIdAndUpdate(id,{$pull:{dislikes:req.usuario._id},$inc:{numeroDislikes:-1}},{new:true})
+        producto.save();
+
+        return res.status(201).json({
+            ok: true,
+            msg:"Dislike quitado",
+            producto
+          });  
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ msg: "Error interno del servidor" });
+    }
+}
 const crearProducto = async(req,res) =>{
     try {
         const {...data} = req.body;
@@ -170,7 +211,9 @@ const crearProducto = async(req,res) =>{
             imagenPrincipal:  req?.file?.filename || 'defaultProducto.png',
             descripcion:data.descripcion || '',
             numeroLikes:0,
+            numeroDislikes: 0,
             likes: [],
+            dislikes: [],
             estado:true,
             categoria:data.categoria,
         }
@@ -295,6 +338,8 @@ module.exports = {
     getProductosByIdNegocioPaginate,
     addLikeProducto,
     removeLikeProducto,
+    addDislikeProducto,
+    removeDislikeProducto,
     crearProducto,
     modProducto,
     modEstadoProduto,
