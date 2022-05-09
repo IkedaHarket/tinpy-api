@@ -1,7 +1,7 @@
 
 const {Router} = require('express');
 const { check, param } = require('express-validator');
-const { crearProducto, getAllProductos, getProductosPaginate, getProductoById, modProducto, modEstadoProduto, deleteProducto, addLikeProducto, removeLikeProducto, getProductosByIdNegocioPaginate, getAllProductosByIdNegocio, getProductosByName, addDislikeProducto, removeDislikeProducto } = require('../controllers/productos');
+const { crearProducto, getAllProductos, getProductosPaginate, getProductoById, modProducto, modEstadoProduto, deleteProducto, addLikeProducto, removeLikeProducto, getProductosByIdNegocioPaginate, getAllProductosByIdNegocio, getProductosByName, addDislikeProducto, removeDislikeProducto, getProductosByNamePaginate } = require('../controllers/productos');
 const { verifyCategoriaById } = require('../helpers/verifyCategorias');
 const { verifyNegocioById } = require('../helpers/verifyNegocio');
 const { verifyProductoById } = require('../helpers/verifyProductos');
@@ -26,6 +26,10 @@ router.get('/name/:name',[
     param('name','El nombre no puede estar vacio').not().isEmpty(),
     validarCampos
 ],getProductosByName)
+router.get('/name-paginate/:name',[
+    param('name','El nombre no puede estar vacio').not().isEmpty(),
+    validarCampos
+],getProductosByNamePaginate)
 
 router.get('/negocio-productos-all/:idNegocio',[
     param('idNegocio','El ID no puede estar vacio').not().isEmpty(),

@@ -75,6 +75,28 @@ const getProductosByName = async (req,res) => {
         });
     }
 }
+const getProductosByNamePaginate = async (req,res) => {
+    try {
+        const { name } = req.params;
+
+        const options = {
+            page: req.query.page || 1,
+            limit: req.query.limit || 10,
+            populate:[
+                { path: 'categoria', model: 'CategoriaProducto',select:'nombre' },
+            ]
+          };
+
+        const productos = await Producto.paginate({nombre:{'$regex' : name, '$options' : 'i'}},options)
+    
+        res.json({productos})
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+          msg: "Error interno del servidor",
+        });
+    }
+}
 const getAllProductosByIdNegocio = async (req,res) => {
     try {
         const productos = await Producto.find({negocio: req.params.idNegocio}).populate([
@@ -334,6 +356,7 @@ module.exports = {
     getProductosPaginate,
     getProductoById,
     getProductosByName,
+    getProductosByNamePaginate,
     getAllProductosByIdNegocio,
     getProductosByIdNegocioPaginate,
     addLikeProducto,
