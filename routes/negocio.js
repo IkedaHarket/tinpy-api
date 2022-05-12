@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const { check, param } = require('express-validator');
-const { crearNegocio, getAllNegocios, getNegociosPaginate, getNegocioById } = require('../controllers/negocio');
+const { crearNegocio, getAllNegocios, getNegociosPaginate, getNegocioById, getNegociosByNamePaginate } = require('../controllers/negocio');
 const { fileUpload } = require('../middlewares/fileUpload');
 
 const { validarCampos } = require('../middlewares/validarCampos');
@@ -19,6 +19,11 @@ router.get('/:id',[
     param('id').custom(verifyNegocioById),
     validarCampos
 ],getNegocioById)
+
+router.get('/name-paginate/:name',[
+    param('name','El nombre no puede estar vacio').not().isEmpty(),
+    validarCampos
+],getNegociosByNamePaginate)
 
 router.post("/",[
     validarJWT,
