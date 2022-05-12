@@ -18,9 +18,17 @@ const getNegocioByIdUser = async(usuario) =>{
     if(!negocio)return false;
     return negocio;
 }
-
+const verifyUsuarioStarsNegocio = async(idNegocio,idUser) => {
+    const producto = await Negocio.findById(idNegocio)
+    let existe = false;
+    producto.estrellas.map(user=>{
+        if (user.equals(idUser)) existe = true;
+    })
+    return existe;
+}
 module.exports = {
     verifyNegocioByIdUser,
     verifyNegocioById,
-    getNegocioByIdUser
+    getNegocioByIdUser,
+    verifyUsuarioStarsNegocio
 }

@@ -21,6 +21,7 @@ class Server {
             productos:        '/api/productos',
             redes:            '/api/redes',
             negocio:          '/api/negocios',
+            stars:            '/api/stars',
         };
         
         this.conectarDB();
@@ -54,6 +55,7 @@ class Server {
         this.app.use(this.paths.productos,      require('../routes/productos'));
         this.app.use(this.paths.redes,          require('../routes/redes'));
         this.app.use(this.paths.negocio,        require('../routes/negocio'));
+        this.app.use(this.paths.stars,          require('../routes/stars'));
     }
     listen(){//Escucha
         this.app.listen(this.port,()=>{

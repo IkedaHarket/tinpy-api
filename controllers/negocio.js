@@ -1,4 +1,5 @@
 const { verifyNegocioByIdUser } = require("../helpers/verifyNegocio");
+
 const Negocio = require("../models/negocio");
 
 const getAllNegocios = async(req,res) =>{
@@ -124,22 +125,6 @@ const crearNegocio = async(req,res) =>{
     }
 }
 const actualizarnegocio = async(req,res) =>{
-  try {
-      
-  } catch (error) {
-      console.log(error);
-      return res.status(500).json({ msg: "Error interno del servidor" });
-  }
-}
-const addStars = async(req,res) =>{
-  try {
-      
-  } catch (error) {
-      console.log(error);
-      return res.status(500).json({ msg: "Error interno del servidor" });
-  }
-}
-const removeStars = async(req,res) =>{
   try {
       
   } catch (error) {

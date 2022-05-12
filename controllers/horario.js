@@ -79,7 +79,7 @@ const crearHorario = async (req, res) => {
       console.log(error);
       return res.status(500).json({ msg: "Error interno del servidor" });
     }
-  };
+};
 const modHorario = async(req,res) =>{
     try {
         const {negocio:extraerNegocioDeData ,...data} = req.body;

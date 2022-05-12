@@ -174,7 +174,6 @@ const removeLikeProducto = async(req,res) => {
         return res.status(500).json({ msg: "Error interno del servidor" });
     }
 }
-
 const addDislikeProducto = async(req,res) =>{
     try {
         const {id} = req.params;

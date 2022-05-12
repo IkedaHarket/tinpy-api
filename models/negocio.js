@@ -30,10 +30,7 @@ const NegocioSchema =  new Schema(
           type: Number,
           default: 0,
       },
-      estrellas:[
-            {type: Schema.Types.ObjectId, ref: "PerfilUsuario"},
-            {type: Number, default:0}
-      ],
+      estrellas:[ {type: Schema.Types.ObjectId, ref: "StarsNegocio"} ],
       promedioEstrellas:{
           type:Number,
           default: 0
