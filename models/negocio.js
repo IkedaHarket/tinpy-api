@@ -26,15 +26,7 @@ const NegocioSchema =  new Schema(
         type: String,
         required: [true, "El nombre del negocio es obligatorio"]
       },
-      totalEstrellas:{
-          type: Number,
-          default: 0,
-      },
       estrellas:[ {type: Schema.Types.ObjectId, ref: "StarsNegocio"} ],
-      promedioEstrellas:{
-          type:Number,
-          default: 0
-      },
       direccion:{
         type: Schema.Types.ObjectId,
         ref: "Direccion",

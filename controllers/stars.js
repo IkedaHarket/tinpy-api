@@ -7,32 +7,39 @@ const addStarsByIdNegocio = async(req,res) => {
     try {
         const { idNegocio } = req.params;
         const { stars: starsByUser } = req.body
-        const {_id:idPerfilUser} = await getIdPerfilByIdUser(req.uid);
-
-        const negocioBeforeAddStars = await Negocio.findById(idNegocio);
-        
+        const {_id:idPerfilUser} = await getIdPerfilByIdUser(req.uid);        
 
         const userHaveStar = await verifyPerfilUserHaveStar(idPerfilUser,idNegocio)
-        console.log(userHaveStar);
+
         if(userHaveStar.resp){
+
+            const stars = await Stars.findByIdAndUpdate(userHaveStar.star._id,{numeroEstrellas:starsByUser});
+            const negocio = await Negocio.findById(idNegocio).populate([
+                { path: 'usuario',model: 'Usuario'},
+                { path: 'tipoNegocio', model: 'TipoNegocio', select:'nombre' },
+                { path: 'direccion', model: 'Direccion' },
+                { path: 'estrellas', model: 'StarsNegocio' },
+            ]);
+            
             res.json({
-                'ok':false,
-                'msg':'Pronto se podran editar las estrellas <3'
+                negocio,
+                stars
             });
         }else{
             const stars = new Stars({perfil:idPerfilUser,numeroEstrellas:starsByUser})
             await stars.save();
-    
-            const promedioEstrellas = (negocioBeforeAddStars.totalEstrellas+starsByUser)/(negocioBeforeAddStars.estrellas.length + 1) || starsByUser;
-            
+                
             const negocio = await Negocio.findByIdAndUpdate(idNegocio,
                 {
                     $addToSet:{estrellas:stars._id},
-                    $inc:{totalEstrellas:starsByUser},
-                    promedioEstrellas
                 },
                 {new:true}
-                );
+                ).populate([
+                    { path: 'usuario',model: 'Usuario'},
+                    { path: 'tipoNegocio', model: 'TipoNegocio', select:'nombre' },
+                    { path: 'direccion', model: 'Direccion' },
+                    { path: 'estrellas', model: 'StarsNegocio' },
+                ]);
             res.json({
                 negocio,
                 stars

@@ -8,6 +8,7 @@ const getAllNegocios = async(req,res) =>{
             { path: 'usuario',model: 'Usuario'},
             { path: 'tipoNegocio', model: 'TipoNegocio', select:'nombre' },
             { path: 'direccion', model: 'Direccion' },
+            { path: 'estrellas', model: 'StarsNegocio' },
         ]);
     
         return res.status(200).json({
@@ -30,6 +31,7 @@ const getNegociosPaginate = async(req,res) =>{
                 { path: 'usuario',model: 'Usuario'},
                 { path: 'tipoNegocio', model: 'TipoNegocio', select:'nombre' },
                 { path: 'direccion', model: 'Direccion' },
+                { path: 'estrellas', model: 'StarsNegocio' },
             ]   
           };
           const negocios = await Negocio.paginate({}, options);
@@ -52,6 +54,7 @@ const getNegocioById = async(req,res) =>{
             { path: 'usuario',model: 'Usuario'},
             { path: 'tipoNegocio', model: 'TipoNegocio', select:'nombre' },
             { path: 'direccion', model: 'Direccion' },
+            { path: 'estrellas', model: 'StarsNegocio' },
         ]);
     
         return res.status(200).json({
@@ -76,6 +79,7 @@ const getNegociosByNamePaginate = async(req,res) =>{
           { path: 'usuario',model: 'Usuario'},
           { path: 'tipoNegocio', model: 'TipoNegocio', select:'nombre' },
           { path: 'direccion', model: 'Direccion' },
+          { path: 'estrellas', model: 'StarsNegocio' },
       ]   
     };
 
