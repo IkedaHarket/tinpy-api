@@ -64,6 +64,14 @@ const getNegocioById = async(req,res) =>{
         });
       }
 }
+const getNegociosByNamePaginate = async(req,res) =>{
+  try {
+      
+  } catch (error) {
+      console.log(error);
+      return res.status(500).json({ msg: "Error interno del servidor" });
+  }
+}
 const crearNegocio = async(req,res) =>{
     try {
         const {...data} = req.body;
@@ -101,7 +109,46 @@ const crearNegocio = async(req,res) =>{
         return res.status(500).json({ msg: "Error interno del servidor" });
     }
 }
-
+const actualizarnegocio = async(req,res) =>{
+  try {
+      
+  } catch (error) {
+      console.log(error);
+      return res.status(500).json({ msg: "Error interno del servidor" });
+  }
+}
+const addStars = async(req,res) =>{
+  try {
+      
+  } catch (error) {
+      console.log(error);
+      return res.status(500).json({ msg: "Error interno del servidor" });
+  }
+}
+const removeStars = async(req,res) =>{
+  try {
+      
+  } catch (error) {
+      console.log(error);
+      return res.status(500).json({ msg: "Error interno del servidor" });
+  }
+}
+const stateNegocio = async(req,res) =>{
+  try {
+      
+  } catch (error) {
+      console.log(error);
+      return res.status(500).json({ msg: "Error interno del servidor" });
+  }
+}
+const deleteNegocio = async(req,res) =>{
+  try {
+      
+  } catch (error) {
+      console.log(error);
+      return res.status(500).json({ msg: "Error interno del servidor" });
+  }
+}
 module.exports = {
     getAllNegocios,
     getNegociosPaginate,
