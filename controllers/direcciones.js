@@ -1,4 +1,6 @@
+const { getNegocioByIdUser } = require('../helpers/verifyNegocio');
 const Direccion = require('../models/direcciones');
+const Negocio = require('../models/negocio');
 
 const getAllDirecciones = async (req, res) => {
     try {
@@ -47,17 +49,23 @@ const getDireccionById = async (req, res) =>{
 }
 const crearDireccion = async (req, res) => {
     try {
-      const { ...data } = req.body;
-        console.log(data)
-      const direccion = new Direccion( data );
-      await direccion.save();
-  
-      return res.status(201).json({
-        ok: true,
-        msg:"Agregado correctamente",
-        direccion
-      });
+      const negocioOld = await getNegocioByIdUser(req.uid)
+      
+      if(negocioOld.direccion){
+        req.params = {id:negocioOld.direccion} 
+        await modDireccion(req,res)
+      }else{
+        const { ...data } = req.body;
+        const direccion = new Direccion( data );
+        await direccion.save();
+        const negocio = await Negocio.findByIdAndUpdate(negocioOld._id,{direccion:direccion._id},{new:true});
 
+        return res.status(201).json({
+          ok: true,
+          msg:"Agregado correctamente",
+          negocio
+        });
+      }
     } catch (error) {
       console.log(error);
       return res.status(500).json({ msg: "Error interno del servidor" });

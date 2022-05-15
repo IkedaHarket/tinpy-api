@@ -37,6 +37,12 @@ const HorariosSchema =  new Schema(
       jueves_cierre: {
         type: String,
       },
+      viernes_inicio: {
+        type: String,
+      },
+      viernes_cierre: {
+        type: String,
+      },
       sabado_inicio: {
         type: String,
       },

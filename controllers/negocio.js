@@ -1,4 +1,5 @@
 const { verifyNegocioByIdUser } = require("../helpers/verifyNegocio");
+const { verifyUserAdmin } = require("../helpers/verifyUsers");
 
 const Negocio = require("../models/negocio");
 
@@ -93,12 +94,11 @@ const getNegociosByNamePaginate = async(req,res) =>{
 }
 const crearNegocio = async(req,res) =>{
     try {
-        const {...data} = req.body;
-
+      const {...data} = req.body;
         if(await verifyNegocioByIdUser(req.usuario._id)){
             return res.status(200).json({
                 ok:false,
-                msg:'Este negocio ya tiene un usuario asociado'
+                msg:'Este usuario ya tiene un negocio asociado'
             })
         }
         const negocioData = {
@@ -106,9 +106,7 @@ const crearNegocio = async(req,res) =>{
             tipoNegocio: data.tipoNegocio,
             img: req?.file?.filename || 'defaultNegocio.png',
             nombre:data.nombre,
-            totalEstrellas: 0,
             estrellas: [],
-            promedioEstrellas:0,
             direccion:null,
             estado:true,
             verificado:false,
@@ -130,13 +128,57 @@ const crearNegocio = async(req,res) =>{
 }
 const actualizarnegocio = async(req,res) =>{
   try {
-      
+    const { id } = req.params;
+    const {...data} = req.body;
+
+    const oldNegocio = await Negocio.findById(id);
+    const userAdmin = await verifyUserAdmin(req)
+
+    if(!(oldNegocio.usuario.equals(req.uid) || userAdmin)){
+        if(req.file) deleteImg(req.file.filename)
+        return res.status(401).json({
+            ok:false,
+            msg:'Usted no tiene permitido hacer esto >:c'
+        })
+    }
+  
+    if(oldNegocio.img != 'defaultNegocio.png') deleteImg(oldProducto.img)
+    data.img = 'defaultNegocio.png'
+    if(req.file){
+        data.img = req.file.filename;
+    }
+    
+    const negocioData = {
+      usuario: req.usuario._id,
+      tipoNegocio: data.tipoNegocio || oldNegocio.tipoNegocio,
+      img: req.img || 'defaultNegocio.png',
+      nombre:data.nombre || oldNegocio.nombre,
+      telefono: data.telefono || oldNegocio.telefono,
+      correo: data.correo || oldNegocio.correo,
+      descripcion: data.descripcion || oldNegocio.descripcion
+  }
+    const negocio = await Producto.findByIdAndUpdate(id,{...negocioData},{new:true});
+    await negocio.save();
+
+    return res.status(201).json({
+        ok:true,
+        msg:'Negocio Modificado',
+        negocio
+    })
   } catch (error) {
       console.log(error);
       return res.status(500).json({ msg: "Error interno del servidor" });
   }
 }
 const stateNegocio = async(req,res) =>{
+  try {
+      
+  } catch (error) {
+      console.log(error);
+      return res.status(500).json({ msg: "Error interno del servidor" });
+  }
+}
+const verifyNegocio = async(req,res) =>{
   try {
       
   } catch (error) {
@@ -152,10 +194,12 @@ const deleteNegocio = async(req,res) =>{
       return res.status(500).json({ msg: "Error interno del servidor" });
   }
 }
+
 module.exports = {
     getAllNegocios,
     getNegociosPaginate,
     getNegocioById,    
     getNegociosByNamePaginate,
     crearNegocio,
+    actualizarnegocio,
 }

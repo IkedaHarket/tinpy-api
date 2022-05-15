@@ -11,7 +11,12 @@ const verifyHorarioByIdNegocio = async(negocio)=>{
     if(existeHorarioNegocio) return true;
     return false;
 }
+const verifyHorarioByIdNegocioMiddleware = async(negocio)=>{
+    const existeHorarioNegocio = await Horarios.findOne({negocio});
+    if(!existeHorarioNegocio) throw new Error(`El id ${id} no existe`);
+}
 module.exports = {
     verifyHorarioById,
     verifyHorarioByIdNegocio,
+    verifyHorarioByIdNegocioMiddleware,
 }

@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const { check, param } = require('express-validator');
-const { crearNegocio, getAllNegocios, getNegociosPaginate, getNegocioById, getNegociosByNamePaginate } = require('../controllers/negocio');
+const { crearNegocio, getAllNegocios, getNegociosPaginate, getNegocioById, getNegociosByNamePaginate, actualizarnegocio } = require('../controllers/negocio');
 const { fileUpload } = require('../middlewares/fileUpload');
 
 const { validarCampos } = require('../middlewares/validarCampos');
@@ -33,6 +33,15 @@ router.post("/",[
     check('nombre','El nombre es obligatorio').not().isEmpty(),
     validarCampos,
 ],crearNegocio)
+
+router.put("/",[
+    validarJWT,
+    fileUpload,
+    check('tipoNegocio','El tipo de negocio no es un mongoID valido').isMongoId(),
+    check('tipoNegocio').custom(verifyTipoNegocioById),
+    check('nombre','El nombre es obligatorio').not().isEmpty(),
+    validarCampos,
+],actualizarnegocio)
 
 
 module.exports = router;

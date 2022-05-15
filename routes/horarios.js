@@ -2,8 +2,8 @@
 const { Router } = require('express');
 const { param } = require('express-validator');
 
-const { getAllHorarios, getHorariosPaginate, getHorarioById, crearHorario, modHorario, deleteHorario } = require('../controllers/horario');
-const { verifyHorarioById } = require('../helpers/verifyHorarios');
+const { getAllHorarios, getHorariosPaginate, getHorarioById, crearHorario, modHorario, deleteHorario, getHorarioByIdNegocio } = require('../controllers/horario');
+const { verifyHorarioById, verifyHorarioByIdNegocioMiddleware } = require('../helpers/verifyHorarios');
 const { validarCampos } = require('../middlewares/validarCampos');
 const { validarJWT } = require('../middlewares/validarJWT');
 
@@ -21,6 +21,13 @@ router.get('/:id',[
     param('id').custom(verifyHorarioById),
     validarCampos
 ],getHorarioById)
+
+router.get('/negocio/:id',[
+    param('id','El ID no puede estar vacio').not().isEmpty(),
+    param('id', 'No es un ID valido').isMongoId(),
+    param('id').custom(verifyHorarioByIdNegocioMiddleware),
+    validarCampos
+],getHorarioByIdNegocio)
 
 router.post('/',[
     validarJWT,
