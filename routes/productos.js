@@ -1,7 +1,24 @@
 
 const {Router} = require('express');
 const { check, param } = require('express-validator');
-const { crearProducto, getAllProductos, getProductosPaginate, getProductoById, modProducto, modEstadoProduto, deleteProducto, addLikeProducto, removeLikeProducto, getProductosByIdNegocioPaginate, getAllProductosByIdNegocio, getProductosByName, addDislikeProducto, removeDislikeProducto, getProductosByNamePaginate } = require('../controllers/productos');
+const { 
+    crearProducto, 
+    getAllProductos, 
+    getProductosPaginate, 
+    getProductoById, 
+    modProducto, 
+    modEstadoProduto, 
+    deleteProducto, 
+    addLikeProducto, 
+    removeLikeProducto, 
+    getProductosByIdNegocioPaginate, 
+    getAllProductosByIdNegocio, 
+    getProductosByName, 
+    addDislikeProducto, 
+    removeDislikeProducto, 
+    getProductosByNamePaginate, 
+    getProductosByNegocioByNamePaginate 
+} = require('../controllers/productos');
 const { verifyCategoriaById } = require('../helpers/verifyCategorias');
 const { verifyNegocioById } = require('../helpers/verifyNegocio');
 const { verifyProductoById } = require('../helpers/verifyProductos');
@@ -22,10 +39,12 @@ router.get('/:id',[
     param('id').custom(verifyProductoById),
     validarCampos
 ],getProductoById)
+
 router.get('/name/:name',[
     param('name','El nombre no puede estar vacio').not().isEmpty(),
     validarCampos
 ],getProductosByName)
+
 router.get('/name-paginate/:name',[
     param('name','El nombre no puede estar vacio').not().isEmpty(),
     validarCampos
@@ -45,6 +64,14 @@ router.get('/negocio-productos-paginate/:idNegocio',[
     validarCampos
 ],getProductosByIdNegocioPaginate)
 
+router.get('/negocio-productos-paginate/:idNegocio/:name',[
+    param('idNegocio','El ID no puede estar vacio').not().isEmpty(),
+    param('idNegocio', 'No es un ID valido').isMongoId(),
+    param('idNegocio').custom(verifyNegocioById),
+    param('name','El nombre no puede estar vacio').not().isEmpty(),
+    validarCampos
+],getProductosByNegocioByNamePaginate)
+
 router.post('/',[
     validarJWT,
     fileUpload,
@@ -54,6 +81,7 @@ router.post('/',[
     check('categoria').custom(verifyCategoriaById),
     validarCampos
 ],crearProducto)
+
 router.put('/:id',[
     validarJWT,
     param('id','El ID no puede estar vacio').not().isEmpty(),
@@ -62,6 +90,7 @@ router.put('/:id',[
     fileUpload,
     validarCampos
 ],modProducto)
+
 router.put('/estado/:id',[
     validarJWT,
     param('id','El ID no puede estar vacio').not().isEmpty(),
@@ -77,6 +106,7 @@ router.put('/add-like/:id',[
     param('id').custom(verifyProductoById),
     validarCampos
 ],addLikeProducto)
+
 router.put('/remove-like/:id',[
     validarJWT,
     param('id','El ID no puede estar vacio').not().isEmpty(),
@@ -92,6 +122,7 @@ router.put('/add-dislike/:id',[
     param('id').custom(verifyProductoById),
     validarCampos
 ],addDislikeProducto)
+
 router.put('/remove-dislike/:id',[
     validarJWT,
     param('id','El ID no puede estar vacio').not().isEmpty(),
@@ -107,4 +138,5 @@ router.delete('/:id',[
     param('id').custom(verifyProductoById),
     validarCampos
 ],deleteProducto)
+
 module.exports = router;
