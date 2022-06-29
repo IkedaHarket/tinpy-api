@@ -1,5 +1,5 @@
 /*
-    Estados Animos Schema
+    Estrellas Schema
 */
 
 const {Schema, model} = require('mongoose');

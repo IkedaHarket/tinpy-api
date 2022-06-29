@@ -137,7 +137,6 @@ const forgotPass = async(req, res) =>{
                   <hr /> <i>Este correo a sido enviado desde la API de Tinpy Services </i>`, 
       });
 
-
       return res.status(200).json({
           ok:true,
           msg:`Correo de recuperacion enviado a ${correo}`

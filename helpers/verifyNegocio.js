@@ -13,6 +13,12 @@ const verifyNegocioById = async(id) =>{
         throw new Error(`El id ${id} no existe`);
     }
 }
+const verifyRouterNegocioByIdUser = async(id) =>{
+    const negocio = await Negocio.findOne({usuario:id});
+    if(!negocio){
+        throw new Error(`El id ${id} no tiene un negocio asociado`);
+    }
+}
 const getNegocioByIdUser = async(usuario) =>{
     const negocio = await Negocio.findOne({usuario})
     if(!negocio)return false;
@@ -30,5 +36,6 @@ module.exports = {
     verifyNegocioByIdUser,
     verifyNegocioById,
     getNegocioByIdUser,
+    verifyRouterNegocioByIdUser,
     verifyUsuarioStarsNegocio
 }

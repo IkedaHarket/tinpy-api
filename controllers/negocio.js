@@ -69,6 +69,27 @@ const getNegocioById = async(req,res) =>{
         });
       }
 }
+const getNegocioByIdUser = async(req,res) =>{
+  try {
+      const { id } = req.params;
+      const negocios = await Negocio.findOne({usuario:id}).populate([
+          { path: 'usuario',model: 'Usuario'},
+          { path: 'tipoNegocio', model: 'TipoNegocio', select:'nombre' },
+          { path: 'direccion', model: 'Direccion' },
+          { path: 'estrellas', model: 'StarsNegocio' },
+      ]);
+  
+      return res.status(200).json({
+        ok: true,
+        negocios,
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        msg: "Error interno del servidor",
+      });
+    }
+}
 const getNegociosByNamePaginate = async(req,res) =>{
   try {
     const { name } = req.params;
@@ -199,6 +220,7 @@ module.exports = {
     getAllNegocios,
     getNegociosPaginate,
     getNegocioById,    
+    getNegocioByIdUser,
     getNegociosByNamePaginate,
     crearNegocio,
     actualizarnegocio,

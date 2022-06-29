@@ -26,6 +26,7 @@ const sendCorreo = async(mailOptions)=>{
         
         return await transporter.sendMail(mailOptions);
     } catch (error) {
+        console.log(error);
         return error;
     }
 }

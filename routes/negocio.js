@@ -1,12 +1,12 @@
 const { Router } = require('express');
 const { check, param } = require('express-validator');
-const { crearNegocio, getAllNegocios, getNegociosPaginate, getNegocioById, getNegociosByNamePaginate, actualizarnegocio } = require('../controllers/negocio');
+const { crearNegocio, getAllNegocios, getNegociosPaginate, getNegocioById, getNegociosByNamePaginate, actualizarnegocio, getNegocioByIdUser } = require('../controllers/negocio');
 const { fileUpload } = require('../middlewares/fileUpload');
 
 const { validarCampos } = require('../middlewares/validarCampos');
 const { validarJWT } = require('../middlewares/validarJWT');
 const { verifyTipoNegocioById } = require('../helpers/verifyTipoNegocio');
-const { verifyNegocioById } = require('../helpers/verifyNegocio');
+const { verifyNegocioById, verifyRouterNegocioByIdUser } = require('../helpers/verifyNegocio');
 
 const router =  new Router();
 
@@ -19,6 +19,13 @@ router.get('/:id',[
     param('id').custom(verifyNegocioById),
     validarCampos
 ],getNegocioById)
+
+router.get('/user/:id',[
+    param('id','El ID no puede estar vacio').not().isEmpty(),
+    param('id', 'No es un ID valido').isMongoId(),
+    param('id').custom(verifyRouterNegocioByIdUser),
+    validarCampos
+],getNegocioByIdUser)
 
 router.get('/name-paginate/:name',[
     param('name','El nombre no puede estar vacio').not().isEmpty(),

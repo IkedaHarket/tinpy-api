@@ -1,5 +1,5 @@
 /*
-    Categoria Producto Schema
+    Categoria Categoria Schema
 */
 
 const {Schema, model} = require('mongoose');

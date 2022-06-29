@@ -1,5 +1,5 @@
 /*
-    Categoria Producto Schema
+    Categoria Horario Schema
 */
 
 const {Schema, model} = require('mongoose');
