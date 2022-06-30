@@ -1,3 +1,4 @@
+const { deleteImg } = require("../helpers/deleteImg");
 const { verifyNegocioByIdUser } = require("../helpers/verifyNegocio");
 const { verifyUserAdmin } = require("../helpers/verifyUsers");
 
