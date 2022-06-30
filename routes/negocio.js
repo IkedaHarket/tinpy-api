@@ -41,9 +41,12 @@ router.post("/",[
     validarCampos,
 ],crearNegocio)
 
-router.put("/",[
+router.put("/:id",[
     validarJWT,
     fileUpload,
+    param('id','El ID no puede estar vacio').not().isEmpty(),
+    param('id', 'No es un ID valido').isMongoId(),
+    param('id').custom(verifyRouterNegocioByIdUser),
     check('tipoNegocio','El tipo de negocio no es un mongoID valido').isMongoId(),
     check('tipoNegocio').custom(verifyTipoNegocioById),
     check('nombre','El nombre es obligatorio').not().isEmpty(),
