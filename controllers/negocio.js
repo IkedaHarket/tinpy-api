@@ -178,7 +178,7 @@ const actualizarnegocio = async(req,res) =>{
       correo: data.correo || oldNegocio.correo,
       descripcion: data.descripcion || oldNegocio.descripcion
   }
-    const negocio = await Producto.findByIdAndUpdate(id,{...negocioData},{new:true});
+    const negocio = await Negocio.findByIdAndUpdate(id,{...negocioData},{new:true});
     await negocio.save();
 
     return res.status(201).json({
