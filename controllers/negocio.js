@@ -164,7 +164,7 @@ const actualizarnegocio = async(req,res) =>{
         })
     }
   
-    if(oldNegocio.img != 'defaultNegocio.png') deleteImg(oldProducto.img)
+    if(oldNegocio.img != 'defaultNegocio.png') deleteImg(oldNegocio.img)
     data.img = 'defaultNegocio.png'
     if(req.file){
         data.img = req.file.filename;
