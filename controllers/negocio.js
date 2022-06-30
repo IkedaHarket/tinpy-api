@@ -172,7 +172,7 @@ const actualizarnegocio = async(req,res) =>{
     const negocioData = {
       usuario: req.usuario._id,
       tipoNegocio: data.tipoNegocio || oldNegocio.tipoNegocio,
-      img: req.img || 'defaultNegocio.png',
+      img: data.img || 'defaultNegocio.png',
       nombre:data.nombre || oldNegocio.nombre,
       telefono: data.telefono || oldNegocio.telefono,
       correo: data.correo || oldNegocio.correo,
