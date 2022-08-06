@@ -25,10 +25,10 @@ router.get('/:id',[
 
 router.post('/',[
     validarJWT,
-    check('comuna','El nombre del tipo de negocio es obligatorio').not().isEmpty(),
-    check('region','El nombre del tipo de negocio es obligatorio').not().isEmpty(),
-    check('direccion','El nombre del tipo de negocio es obligatorio').not().isEmpty(),
-    check('numero','El nombre del tipo de negocio es obligatorio').not().isEmpty(),
+    // check('comuna','El nombre del tipo de negocio es obligatorio').not().isEmpty(),
+    // check('region','El nombre del tipo de negocio es obligatorio').not().isEmpty(),
+    // check('direccion','El nombre del tipo de negocio es obligatorio').not().isEmpty(),
+    // check('numero','El nombre del tipo de negocio es obligatorio').not().isEmpty(),
     validarCampos
 ],crearDireccion)
 
