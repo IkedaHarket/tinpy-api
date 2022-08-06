@@ -1,3 +1,4 @@
+const { deleteImg } = require("../helpers/deleteImg");
 const { verifyNegocioByIdUser } = require("../helpers/verifyNegocio");
 const { verifyUserAdmin } = require("../helpers/verifyUsers");
 
@@ -163,7 +164,7 @@ const actualizarnegocio = async(req,res) =>{
         })
     }
   
-    if(oldNegocio.img != 'defaultNegocio.png') deleteImg(oldProducto.img)
+    if(oldNegocio.img != 'defaultNegocio.png') deleteImg(oldNegocio.img)
     data.img = 'defaultNegocio.png'
     if(req.file){
         data.img = req.file.filename;
@@ -172,7 +173,7 @@ const actualizarnegocio = async(req,res) =>{
     const negocioData = {
       usuario: req.usuario._id,
       tipoNegocio: data.tipoNegocio || oldNegocio.tipoNegocio,
-      img: req.img || 'defaultNegocio.png',
+      img: data.img || 'defaultNegocio.png',
       nombre:data.nombre || oldNegocio.nombre,
       telefono: data.telefono || oldNegocio.telefono,
       correo: data.correo || oldNegocio.correo,
