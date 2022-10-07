@@ -57,6 +57,31 @@ const getUserById = async (req, res) =>{
         })
     }
 }
+const verifyUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (await verifyUserRol(req, res, "admin")) return false;
+
+    const { verify } = await Usuario.findById(id);
+    const usuario = await Usuario.findByIdAndUpdate(
+      id,
+      { verify: !verify },
+      { new: true }
+    );
+
+    return res.status(200).json({
+      ok: true,
+      usuario,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      msg: "Error Interno del servidor",
+    });
+  }
+};
+
 const banearUsuario = async (req, res) => {
   try {
     const { id } = req.params;
@@ -136,5 +161,6 @@ module.exports = {
     getUserById,
     banearUsuario,
     changeRolUser,
-    changePassword
+    changePassword,
+    verifyUser
 }

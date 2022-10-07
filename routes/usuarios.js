@@ -1,7 +1,7 @@
 const {Router} = require('express');
 const { check, param } = require("express-validator");
 
-const { getAllUsers, getUserById, banearUsuario, changeRolUser, changePassword, getUsersPaginate } = require("../controllers/usuarios")
+const { getAllUsers, getUserById, banearUsuario, changeRolUser, changePassword, getUsersPaginate, verifyUser } = require("../controllers/usuarios")
 const { verifyUserId, verifyEmailNoReg } = require('../helpers/verifyUsers');
 const { validarCampos } = require('../middlewares/validarCampos');
 const { validarJWT } = require('../middlewares/validarJWT');
@@ -19,6 +19,15 @@ router.get('/:id',[
     param('id').custom(verifyUserId),
     validarCampos
 ],getUserById)
+
+router.put('/verify/:id',[
+    validarJWT,
+    param('id','El ID no puede estar vacio').not().isEmpty(),
+    param('id', 'No es un ID valido').isMongoId(),
+    param('id').custom(verifyUserId),
+    validarCampos
+],verifyUser);
+
 
 router.put('/ban/:id',[
     validarJWT,
