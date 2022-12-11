@@ -114,12 +114,11 @@ const modPerfilUser = async(req,res) =>{
                 msg:'Usted no tiene permitido hacer esto >:c'
             })
         }
-        if(oldPerfil.img != 'default.png') deleteImg(oldPerfil.img)
+        // if(oldPerfil.img != 'default.png') deleteImg(oldPerfil.img)
 
         const {...data} = req.body;
-
-        data.img = 'default.png';
-
+        
+        if(!data.img) data.img = oldPerfil.img;
         if(req.file) data.img = req.file.filename;
 
         

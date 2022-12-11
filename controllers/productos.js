@@ -289,8 +289,8 @@ const modProducto = async(req,res) =>{
                 msg:'Usted no tiene permitido hacer esto >:c'
             })
         }
-        if(oldProducto.imagenPrincipal != 'defaultProducto.png') deleteImg(oldProducto.imagenPrincipal)
-        data.imagenPrincipal = 'defaultProducto.png'
+        // if(oldProducto.imagenPrincipal != 'defaultProducto.png') deleteImg(oldProducto.imagenPrincipal)
+        // data.imagenPrincipal = 'defaultProducto.png'
         if(req.file){
             data.imagenPrincipal = req.file.filename;
         }
@@ -298,7 +298,7 @@ const modProducto = async(req,res) =>{
         const productoData = {
             nombre: data.nombre || oldProducto.nombre,
             precio: data.precio || oldProducto.precio,
-            imagenPrincipal:data.imagenPrincipal,
+            imagenPrincipal:data.imagenPrincipal || oldProducto.imagenPrincipal,
             descripcion:data.descripcion || oldProducto.descripcion,
             numeroLikes:oldProducto.numeroLikes,
             likes: oldProducto.likes,
@@ -331,9 +331,9 @@ const modEstadoProduto = async(req,res) => {
                 msg:'Usted no tiene permitido hacer esto >:c'
             })
         }
-        if(oldProducto.imagenPrincipal != 'defaultProducto.png') deleteImg(oldProducto.imagenPrincipal)
+        // if(oldProducto.imagenPrincipal != 'defaultProducto.png') deleteImg(oldProducto.imagenPrincipal)
 
-        const producto = await Producto.findByIdAndUpdate(id,{estado:!oldProducto.estado ,imagenPrincipal:'defaultProducto.png'},{new:true})
+        const producto = await Producto.findByIdAndUpdate(id,{estado:!oldProducto.estado },{new:true})
 
         return res.status(201).json({
             ok:true,
